@@ -23,7 +23,7 @@ export default function ContactForm() {
         <button
           type="button"
           onClick={() => setEnviado(false)}
-          className="mt-5 text-sm font-semibold text-accent-700 hover:text-accent-800"
+          className="mt-5 text-sm font-semibold text-brand hover:text-brand"
         >
           Enviar outra mensagem
         </button>

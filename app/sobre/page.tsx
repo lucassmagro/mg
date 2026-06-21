@@ -62,7 +62,7 @@ export default function SobrePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="border-b border-ink/10 bg-white">
+      <section className="border-b border-ink/10 bg-surface">
         <div className="container-x grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
           <div>
             <p className="eyebrow">A incorporadora</p>
@@ -118,9 +118,9 @@ export default function SobrePage() {
           {valores.map((v) => (
             <div
               key={v.titulo}
-              className="rounded-2xl border border-ink/10 bg-white p-8 shadow-card"
+              className="rounded-2xl border border-ink/10 bg-surface p-8 shadow-card"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-600/10 text-accent-700">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
                 <v.icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <h2 className="mt-5 font-serif text-2xl text-ink">{v.titulo}</h2>
@@ -131,7 +131,7 @@ export default function SobrePage() {
       </section>
 
       {/* Como trabalhamos */}
-      <section className="bg-white py-20">
+      <section className="bg-surface py-20">
         <div className="container-x">
           <div className="max-w-2xl">
             <p className="eyebrow">Como trabalhamos</p>
@@ -143,7 +143,7 @@ export default function SobrePage() {
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {etapas.map((e) => (
               <div key={e.n} className="rounded-2xl bg-sand-50 p-7">
-                <p className="font-serif text-3xl font-semibold text-accent-600">
+                <p className="font-serif text-3xl font-semibold text-brand">
                   {e.n}
                 </p>
                 <h3 className="mt-3 font-serif text-lg text-ink">{e.titulo}</h3>
@@ -178,7 +178,7 @@ export default function SobrePage() {
             </a>
             <Link
               href="/contato"
-              className="btn inline-flex bg-white px-6 py-3 text-accent-700 hover:bg-sand-100"
+              className="btn inline-flex bg-[#ffffff] px-6 py-3 text-[#0d4185] hover:bg-accent-50"
             >
               Página de contato
             </Link>

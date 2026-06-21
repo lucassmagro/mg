@@ -52,7 +52,7 @@ export default function GaleriaCategorizada({
             className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               i === catAtiva
                 ? "border-accent-600 bg-accent-600 text-white"
-                : "border-ink/15 bg-white text-ink-soft hover:border-ink/30"
+                : "border-ink/15 bg-surface text-ink-soft hover:border-ink/30"
             }`}
           >
             {cat.titulo}
@@ -77,7 +77,7 @@ export default function GaleriaCategorizada({
               sizes="(max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <span className="absolute inset-0 bg-ink/0 transition-colors group-hover:bg-ink/10" />
+            <span className="absolute inset-0 bg-night/0 transition-colors group-hover:bg-night/10" />
           </button>
         ))}
       </div>
@@ -85,7 +85,7 @@ export default function GaleriaCategorizada({
       {/* Lightbox */}
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/95 p-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-night/95 p-4"
           onClick={fechar}
           role="dialog"
           aria-modal="true"

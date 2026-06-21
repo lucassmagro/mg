@@ -128,7 +128,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/sobre"
-              className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-accent-700"
+              className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-brand"
             >
               Conheça a {marca.nomeCurto}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -139,9 +139,9 @@ export default function HomePage() {
             {valores.map((v) => (
               <div
                 key={v.titulo}
-                className="rounded-2xl border border-ink/10 bg-white p-6 shadow-card"
+                className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-600/10 text-accent-700">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
                   <v.icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="mt-4 font-serif text-lg text-ink">{v.titulo}</h3>
@@ -155,7 +155,7 @@ export default function HomePage() {
       </section>
 
       {/* EMPREENDIMENTO EM DESTAQUE */}
-      <section className="bg-white py-20">
+      <section className="bg-surface py-20">
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -166,7 +166,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/empreendimentos"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-accent-700"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-brand"
             >
               Ver todos os empreendimentos
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -189,7 +189,7 @@ export default function HomePage() {
 
             <div>
               <p className="flex items-center gap-1.5 text-sm text-ink-muted">
-                <MapPin className="h-4 w-4 text-accent-600" />
+                <MapPin className="h-4 w-4 text-brand" />
                 {destaque.bairro}, {destaque.cidade}
               </p>
               <p className="mt-4 leading-relaxed text-ink-soft">
@@ -203,7 +203,7 @@ export default function HomePage() {
                       key={d.titulo}
                       className="flex items-center gap-2.5 text-sm text-ink-soft"
                     >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-600/10 text-accent-700">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-600/10 text-brand">
                         <Icon className="h-4 w-4" />
                       </span>
                       {d.titulo}
@@ -234,7 +234,7 @@ export default function HomePage() {
           </div>
           <Link
             href={`/empreendimentos/${destaque.id}`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-accent-700"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-brand"
           >
             Ver galeria completa
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -279,7 +279,7 @@ export default function HomePage() {
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn inline-flex shrink-0 bg-white px-7 py-4 text-base text-accent-700 hover:bg-sand-100"
+              className="btn inline-flex shrink-0 bg-[#ffffff] px-7 py-4 text-base text-[#0d4185] hover:bg-accent-50"
             >
               <MessageCircle className="h-5 w-5" aria-hidden="true" />
               Falar no WhatsApp

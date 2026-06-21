@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
 import { marca, navLinks, whatsappLink } from "@/lib/config";
 
 export default function Header() {
@@ -36,7 +37,7 @@ export default function Header() {
       }`}
     >
       <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-20">
-        <Logo />
+        <Logo themed />
 
         <nav
           aria-label="Navegação principal"
@@ -49,7 +50,7 @@ export default function Header() {
               aria-current={isActive(link.href) ? "page" : undefined}
               className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 isActive(link.href)
-                  ? "text-accent-700"
+                  ? "text-brand"
                   : "text-ink-soft hover:text-ink"
               }`}
             >
@@ -62,6 +63,7 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <a
             href={whatsappLink(
               "Olá! Vi o site e gostaria de mais informações.",
@@ -100,7 +102,7 @@ export default function Header() {
                 aria-current={isActive(link.href) ? "page" : undefined}
                 className={`rounded-xl px-4 py-3 text-base font-medium ${
                   isActive(link.href)
-                    ? "bg-accent-50 text-accent-700"
+                    ? "bg-accent-50 text-[#0d4185]"
                     : "text-ink-soft hover:bg-sand-100"
                 }`}
               >

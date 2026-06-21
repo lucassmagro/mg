@@ -52,7 +52,7 @@ export default function HeroCarrossel({
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/40 to-ink/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-night/70 via-night/40 to-night/80" />
 
       {/* Indicadores */}
       <div className="absolute bottom-5 right-5 z-10 flex items-center gap-1.5 sm:right-8">

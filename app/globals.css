@@ -5,6 +5,30 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* Tokens — tema claro */
+    --sand-50: 250 249 246;
+    --sand-100: 244 242 236;
+    --sand-200: 232 228 217;
+    --sand-300: 216 210 194;
+    --ink: 26 26 23;
+    --ink-soft: 61 61 56;
+    --ink-muted: 107 107 99;
+    --surface: 255 255 255;
+    --brand: 15 78 159;
+  }
+
+  .dark {
+    color-scheme: dark;
+    /* Tokens — tema escuro */
+    --sand-50: 12 17 24;
+    --sand-100: 26 36 52;
+    --sand-200: 31 42 60;
+    --sand-300: 43 56 80;
+    --ink: 231 234 241;
+    --ink-soft: 183 190 208;
+    --ink-muted: 139 147 167;
+    --surface: 19 27 41;
+    --brand: 123 163 223;
   }
 
   html {
@@ -45,7 +69,7 @@
   }
 
   .btn-outline {
-    @apply btn border border-ink/15 bg-white px-6 py-3 text-ink hover:border-ink/30 hover:bg-sand-100;
+    @apply btn border border-ink/15 bg-surface px-6 py-3 text-ink hover:border-ink/30 hover:bg-sand-100;
   }
 
   .btn-whatsapp {
@@ -53,11 +77,11 @@
   }
 
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.18em] text-accent-600;
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-brand;
   }
 
   .field {
-    @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink
+    @apply w-full rounded-xl border border-ink/15 bg-surface px-4 py-3 text-sm text-ink
       placeholder:text-ink-muted/70 focus:border-accent-600;
   }
 

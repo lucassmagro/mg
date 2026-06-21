@@ -94,11 +94,11 @@ export default function EmpreendimentoPage({
       </section>
 
       {/* NÚMEROS */}
-      <section className="border-b border-ink/10 bg-white">
+      <section className="border-b border-ink/10 bg-surface">
         <div className="container-x grid grid-cols-2 gap-6 py-10 sm:grid-cols-4">
           {e.numeros.map((n) => (
             <div key={n.label} className="text-center sm:text-left">
-              <p className="font-serif text-3xl font-semibold text-accent-700 sm:text-4xl">
+              <p className="font-serif text-3xl font-semibold text-brand sm:text-4xl">
                 {n.valor}
               </p>
               <p className="mt-1 text-sm text-ink-muted">{n.label}</p>
@@ -130,9 +130,9 @@ export default function EmpreendimentoPage({
               return (
                 <div
                   key={d.titulo}
-                  className="rounded-2xl border border-ink/10 bg-white p-6 shadow-card"
+                  className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card"
                 >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-600/10 text-accent-700">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <h4 className="mt-4 font-serif text-lg text-ink">
@@ -150,7 +150,7 @@ export default function EmpreendimentoPage({
         {/* Card de contato */}
         <aside>
           <div className="sticky top-24 space-y-4">
-            <div className="rounded-2xl border border-ink/10 bg-white p-6 shadow-card">
+            <div className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card">
               <p className="font-serif text-xl text-ink">
                 Interessado no {e.nome}?
               </p>
@@ -188,7 +188,7 @@ export default function EmpreendimentoPage({
       </div>
 
       {/* GALERIA */}
-      <section className="border-t border-ink/10 bg-white py-16">
+      <section className="border-t border-ink/10 bg-surface py-16">
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -232,7 +232,7 @@ export default function EmpreendimentoPage({
               href={p.src}
               target="_blank"
               rel="noopener noreferrer"
-              className="group rounded-2xl border border-ink/10 bg-white p-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-card-hover"
+              className="group rounded-2xl border border-ink/10 bg-surface p-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-card-hover"
             >
               <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-sand-100">
                 <Image
@@ -251,7 +251,7 @@ export default function EmpreendimentoPage({
       </section>
 
       {/* VÍDEOS */}
-      <section className="border-t border-ink/10 bg-white py-16">
+      <section className="border-t border-ink/10 bg-surface py-16">
         <div className="container-x">
           <p className="eyebrow">Vídeos</p>
           <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
@@ -272,7 +272,7 @@ export default function EmpreendimentoPage({
                   </video>
                 </div>
                 <figcaption className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-soft">
-                  <Play className="h-4 w-4 text-accent-600" aria-hidden="true" />
+                  <Play className="h-4 w-4 text-brand" aria-hidden="true" />
                   {v.titulo}
                 </figcaption>
               </figure>
@@ -298,7 +298,7 @@ export default function EmpreendimentoPage({
                   key={p}
                   className="flex items-center gap-2.5 text-sm text-ink-soft"
                 >
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-600/10 text-accent-700">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-600/10 text-brand">
                     <Check className="h-4 w-4" />
                   </span>
                   {p}
@@ -325,7 +325,7 @@ export default function EmpreendimentoPage({
             <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
               Resumo do empreendimento
             </h2>
-            <dl className="mt-6 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-white">
+            <dl className="mt-6 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-surface">
               {e.ficha.map((f) => (
                 <div
                   key={f.label}
@@ -361,7 +361,7 @@ export default function EmpreendimentoPage({
               href={whatsappLink(mensagemWpp)}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn inline-flex bg-white px-7 py-4 text-accent-700 hover:bg-sand-100"
+              className="btn inline-flex bg-[#ffffff] px-7 py-4 text-[#0d4185] hover:bg-accent-50"
             >
               <MessageCircle className="h-5 w-5" aria-hidden="true" />
               Falar no WhatsApp

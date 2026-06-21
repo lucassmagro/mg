@@ -12,7 +12,7 @@ export default function VisitForm({ titulo }: { titulo: string }) {
 
   if (enviado) {
     return (
-      <div className="rounded-xl border border-accent-200 bg-accent-50 p-5 text-center">
+      <div className="rounded-xl border border-accent-200 bg-accent-50 p-5 text-center dark:border-accent-400/30 dark:bg-accent-400/10">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-white">
           <Check className="h-6 w-6" />
         </span>
@@ -24,7 +24,7 @@ export default function VisitForm({ titulo }: { titulo: string }) {
         <button
           type="button"
           onClick={() => setEnviado(false)}
-          className="mt-4 text-sm font-semibold text-accent-700 hover:text-accent-800"
+          className="mt-4 text-sm font-semibold text-brand hover:text-brand"
         >
           Enviar nova solicitação
         </button>

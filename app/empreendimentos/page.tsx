@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function EmpreendimentosPage() {
   return (
     <div className="bg-sand-50">
-      <section className="border-b border-ink/10 bg-white">
+      <section className="border-b border-ink/10 bg-surface">
         <div className="container-x py-12 sm:py-16">
           <p className="eyebrow">Portfólio</p>
           <h1 className="mt-2 font-serif text-3xl font-semibold text-ink sm:text-4xl">
@@ -37,8 +37,8 @@ export default function EmpreendimentosPage() {
           ))}
 
           {/* Teaser — próximos lançamentos */}
-          <div className="flex flex-col items-start justify-center rounded-2xl border border-dashed border-ink/20 bg-white/60 p-8">
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-600/10 text-accent-700">
+          <div className="flex flex-col items-start justify-center rounded-2xl border border-dashed border-ink/20 bg-surface/60 p-8">
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
               <Clock className="h-6 w-6" />
             </span>
             <h3 className="mt-5 font-serif text-xl text-ink">

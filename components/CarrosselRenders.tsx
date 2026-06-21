@@ -74,7 +74,7 @@ export default function CarrosselRenders({
               sizes="(max-width: 1024px) 100vw, 1200px"
               className="object-cover"
             />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-5 pt-16 sm:p-8 sm:pt-20">
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/70 to-transparent p-5 pt-16 sm:p-8 sm:pt-20">
               <p className="font-serif text-lg text-white sm:text-2xl">
                 {img.alt}
               </p>
@@ -88,7 +88,7 @@ export default function CarrosselRenders({
         type="button"
         onClick={() => ir(-1)}
         aria-label="Imagem anterior"
-        className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-ink shadow-sm backdrop-blur-sm transition hover:bg-white sm:left-5"
+        className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-night shadow-sm backdrop-blur-sm transition hover:bg-white sm:left-5"
       >
         <ChevronLeft className="h-6 w-6" />
       </button>
@@ -96,7 +96,7 @@ export default function CarrosselRenders({
         type="button"
         onClick={() => ir(1)}
         aria-label="Próxima imagem"
-        className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-ink shadow-sm backdrop-blur-sm transition hover:bg-white sm:right-5"
+        className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-night shadow-sm backdrop-blur-sm transition hover:bg-white sm:right-5"
       >
         <ChevronRight className="h-6 w-6" />
       </button>

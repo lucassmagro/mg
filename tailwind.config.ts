@@ -1,9 +1,8 @@
 import type { Config } from "tailwindcss";
 
 /**
- * ACCENT COLOR — single source of truth.
- * Azul corporativo da marca MG Incorporações (#0f4e9f). Cada botão, badge,
- * link e destaque lê de `accent`. Para rebrand, troque toda a escala abaixo.
+ * ACCENT COLOR — escala azul da marca MG Incorporações (#0f4e9f).
+ * Usada em botões/faixas (mesma cor nos dois temas).
  */
 const accent = {
   50: "#eef3fb",
@@ -19,7 +18,16 @@ const accent = {
   950: "#0a1d39",
 };
 
+/**
+ * Tokens semânticos via CSS variables (ver app/globals.css).
+ * `sand` (fundos), `ink` (textos), `surface` (cartões) e `brand` (azul de
+ * texto/ícones) trocam de valor no modo escuro (.dark) — a maioria das classes
+ * inverte automaticamente. `night` é fixo, para overlays sobre fotos.
+ */
+const v = (name: string) => `rgb(var(${name}) / <alpha-value>)`;
+
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -29,27 +37,29 @@ const config: Config = {
     extend: {
       colors: {
         accent,
-        // Warm neutral base
         sand: {
-          50: "#faf9f6",
-          100: "#f4f2ec",
-          200: "#e8e4d9",
-          300: "#d8d2c2",
+          50: v("--sand-50"),
+          100: v("--sand-100"),
+          200: v("--sand-200"),
+          300: v("--sand-300"),
         },
         ink: {
-          DEFAULT: "#1a1a17",
-          soft: "#3d3d38",
-          muted: "#6b6b63",
+          DEFAULT: v("--ink"),
+          soft: v("--ink-soft"),
+          muted: v("--ink-muted"),
         },
+        surface: v("--surface"),
+        brand: v("--brand"),
+        night: "#0b0f17",
       },
       fontFamily: {
         serif: ["var(--font-fraunces)", "Georgia", "serif"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(26,26,23,0.04), 0 8px 24px -12px rgba(26,26,23,0.18)",
+        card: "0 1px 2px rgba(10,15,25,0.06), 0 8px 24px -12px rgba(10,15,25,0.25)",
         "card-hover":
-          "0 2px 4px rgba(26,26,23,0.05), 0 18px 40px -18px rgba(26,26,23,0.30)",
+          "0 2px 4px rgba(10,15,25,0.08), 0 18px 40px -18px rgba(10,15,25,0.38)",
       },
       maxWidth: {
         container: "1200px",

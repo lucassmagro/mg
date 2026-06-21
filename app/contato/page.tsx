@@ -24,7 +24,7 @@ export default function ContatoPage() {
   return (
     <div className="bg-sand-50">
       {/* Hero */}
-      <section className="border-b border-ink/10 bg-white">
+      <section className="border-b border-ink/10 bg-surface">
         <div className="container-x py-14 lg:py-16">
           <p className="eyebrow">Fale com a gente</p>
           <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl">
@@ -61,7 +61,7 @@ export default function ContatoPage() {
             linhas={marca.horario.map((h) => `${h.dias}: ${h.horas}`)}
           />
 
-          <div className="flex flex-col justify-center rounded-2xl border border-ink/10 bg-white p-6 shadow-card md:col-span-2 lg:col-span-2">
+          <div className="flex flex-col justify-center rounded-2xl border border-ink/10 bg-surface p-6 shadow-card md:col-span-2 lg:col-span-2">
             <p className="font-serif text-xl text-ink">
               Prefere falar agora?
             </p>
@@ -84,7 +84,7 @@ export default function ContatoPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-accent-700"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-brand"
               >
                 <Instagram className="h-5 w-5" />
               </a>
@@ -93,7 +93,7 @@ export default function ContatoPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-accent-700"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-brand"
               >
                 <Facebook className="h-5 w-5" />
               </a>
@@ -130,8 +130,8 @@ function InfoCard({
   linhas: string[];
 }) {
   return (
-    <div className="flex gap-4 rounded-2xl border border-ink/10 bg-white p-6 shadow-card">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600/10 text-accent-700">
+    <div className="flex gap-4 rounded-2xl border border-ink/10 bg-surface p-6 shadow-card">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
         <Icon className="h-5 w-5" />
       </span>
       <div>

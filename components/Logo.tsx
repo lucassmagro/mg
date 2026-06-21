@@ -6,15 +6,19 @@ import { marca } from "@/lib/config";
  * Logotipo da marca MG Incorporações.
  * - orientation "horizontal": marca + "INCORPORAÇÕES" lado a lado (cabeçalho).
  * - orientation "stacked": marca acima de "INCORPORAÇÕES" (rodapé).
- * A variante "light" inverte para uso sobre fundos escuros.
+ * - variant "dark"/"light": versão para fundo claro/escuro.
+ * - themed: troca automaticamente conforme o tema (preta no claro, branca no
+ *   escuro) — usado no cabeçalho.
  */
 export default function Logo({
   variant = "dark",
   orientation = "horizontal",
+  themed = false,
   className = "",
 }: {
   variant?: "dark" | "light";
   orientation?: "horizontal" | "stacked";
+  themed?: boolean;
   className?: string;
 }) {
   const sources = {
@@ -28,8 +32,6 @@ export default function Logo({
     },
   } as const;
 
-  const src = sources[orientation][variant];
-
   const dims =
     orientation === "stacked"
       ? { width: 150, height: 170, cls: "h-16 w-auto lg:h-20" }
@@ -41,15 +43,38 @@ export default function Logo({
       aria-label={`${marca.nome} — página inicial`}
       className={`inline-flex items-center ${className}`}
     >
-      <Image
-        src={src}
-        alt={marca.nome}
-        width={dims.width}
-        height={dims.height}
-        priority
-        unoptimized
-        className={dims.cls}
-      />
+      {themed ? (
+        <>
+          <Image
+            src={sources[orientation].dark}
+            alt={marca.nome}
+            width={dims.width}
+            height={dims.height}
+            priority
+            unoptimized
+            className={`${dims.cls} dark:hidden`}
+          />
+          <Image
+            src={sources[orientation].light}
+            alt={marca.nome}
+            width={dims.width}
+            height={dims.height}
+            priority
+            unoptimized
+            className={`${dims.cls} hidden dark:block`}
+          />
+        </>
+      ) : (
+        <Image
+          src={sources[orientation][variant]}
+          alt={marca.nome}
+          width={dims.width}
+          height={dims.height}
+          priority
+          unoptimized
+          className={dims.cls}
+        />
+      )}
     </Link>
   );
 }

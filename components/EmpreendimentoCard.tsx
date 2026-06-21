@@ -13,7 +13,7 @@ export default function EmpreendimentoCard({
   priority?: boolean;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
       <Link
         href={`/empreendimentos/${e.id}`}
         className="relative block aspect-[4/3] overflow-hidden"
@@ -30,7 +30,7 @@ export default function EmpreendimentoCard({
           <span className="rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
             {STATUS_LABEL[e.status]}
           </span>
-          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink-soft backdrop-blur-sm">
+          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-night backdrop-blur-sm">
             {e.categoria}
           </span>
         </div>
@@ -40,15 +40,15 @@ export default function EmpreendimentoCard({
         <h3 className="font-serif text-2xl text-ink">
           <Link
             href={`/empreendimentos/${e.id}`}
-            className="transition-colors hover:text-accent-700"
+            className="transition-colors hover:text-brand"
           >
             {e.nome}
           </Link>
         </h3>
-        <p className="mt-1 text-sm font-medium text-accent-700">{e.subtitulo}</p>
+        <p className="mt-1 text-sm font-medium text-brand">{e.subtitulo}</p>
 
         <p className="mt-1.5 flex items-center gap-1.5 text-sm text-ink-muted">
-          <MapPin className="h-4 w-4 text-accent-600" aria-hidden="true" />
+          <MapPin className="h-4 w-4 text-brand" aria-hidden="true" />
           {e.bairro}, {e.cidade}
         </p>
 
@@ -58,7 +58,7 @@ export default function EmpreendimentoCard({
 
         <Link
           href={`/empreendimentos/${e.id}`}
-          className="group/link mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent-700"
+          className="group/link mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand"
         >
           Conhecer o empreendimento
           <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
