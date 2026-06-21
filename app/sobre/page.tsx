@@ -72,7 +72,7 @@ export default function SobrePage() {
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
               A {marca.nome} nasceu em {marca.fundadaEm} com um objetivo claro:
               desenvolver empreendimentos que combinam localização, arquitetura
-              e qualidade construtiva — imóveis que valorizam com o tempo e
+              e qualidade construtiva. São imóveis que valorizam com o tempo e
               melhoram a rotina de quem os ocupa.
             </p>
             <p className="mt-4 leading-relaxed text-ink-soft">

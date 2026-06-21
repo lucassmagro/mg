@@ -15,13 +15,13 @@ export default function Footer() {
   const ano = new Date().getFullYear();
 
   return (
-    <footer className="mt-24 bg-accent-950 text-sand-100">
+    <footer className="mt-24 bg-accent-950 text-white/90">
       <div className="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:pr-6">
           <div className="inline-flex rounded-2xl bg-white p-5">
             <Logo variant="dark" orientation="stacked" />
           </div>
-          <p className="mt-5 max-w-xs text-sm leading-relaxed text-sand-100/70">
+          <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/65">
             {marca.descricaoCurta}
           </p>
           <div className="mt-6 flex items-center gap-3">
@@ -73,7 +73,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sand-100/75 transition-colors hover:text-white"
+                  className="text-white/70 transition-colors hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -86,7 +86,7 @@ export default function Footer() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
             Contato
           </h3>
-          <ul className="mt-5 space-y-4 text-sm text-sand-100/75">
+          <ul className="mt-5 space-y-4 text-sm text-white/70">
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" />
               <span>
@@ -117,11 +117,11 @@ export default function Footer() {
           <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
             Atendimento
           </h3>
-          <ul className="mt-5 space-y-3 text-sm text-sand-100/75">
+          <ul className="mt-5 space-y-3 text-sm text-white/70">
             {marca.horario.map((h) => (
               <li key={h.dias} className="flex justify-between gap-4">
                 <span>{h.dias}</span>
-                <span className="text-sand-100/90">{h.horas}</span>
+                <span className="text-white/90">{h.horas}</span>
               </li>
             ))}
           </ul>
@@ -138,7 +138,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-xs text-sand-100/60 sm:flex-row">
+        <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-xs text-white/55 sm:flex-row">
           <p>
             © {ano} {marca.nome}. Todos os direitos reservados.
           </p>

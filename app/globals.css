@@ -19,15 +19,15 @@
 
   .dark {
     color-scheme: dark;
-    /* Tokens — tema escuro */
-    --sand-50: 12 17 24;
-    --sand-100: 26 36 52;
-    --sand-200: 31 42 60;
-    --sand-300: 43 56 80;
-    --ink: 231 234 241;
-    --ink-soft: 183 190 208;
-    --ink-muted: 139 147 167;
-    --surface: 19 27 41;
+    /* Tokens — tema escuro (tons de preto neutro) */
+    --sand-50: 10 10 11;
+    --sand-100: 23 23 25;
+    --sand-200: 33 33 36;
+    --sand-300: 48 48 52;
+    --ink: 237 237 240;
+    --ink-soft: 178 178 184;
+    --ink-muted: 132 132 140;
+    --surface: 24 24 27;
     --brand: 123 163 223;
   }
 

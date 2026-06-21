@@ -18,6 +18,24 @@ export const STATUS_LABEL: Record<StatusEmpreendimento, string> = {
   breve: "Em breve",
 };
 
+/** Formas de negociação disponíveis no empreendimento (busca da home). */
+export type Operacao = "comprar" | "alugar" | "temporada";
+
+export const OPERACAO_LABEL: Record<Operacao, string> = {
+  comprar: "Comprar",
+  alugar: "Alugar",
+  temporada: "Por temporada",
+};
+
+/** Finalidade do imóvel (chips de "Finalidade" na busca). */
+export type TipoImovel = "residencial" | "comercial" | "industrial";
+
+export const TIPO_IMOVEL_LABEL: Record<TipoImovel, string> = {
+  residencial: "Residencial",
+  comercial: "Comercial",
+  industrial: "Industrial",
+};
+
 export interface Numero {
   valor: string;
   label: string;
@@ -70,6 +88,13 @@ export interface Empreendimento {
   tagline: string;
   status: StatusEmpreendimento;
   categoria: string; // ex.: "Salas comerciais"
+  /** Finalidade do imóvel — usado nos filtros da busca da home. */
+  tipoImovel: TipoImovel;
+  /** Formas de negociação disponíveis (abas Comprar/Alugar/Por temporada). */
+  operacoes: Operacao[];
+  /** Valores "a partir de" — ilustrativos (protótipo); alimentam o filtro de preço. */
+  precoVenda?: number;
+  precoAluguel?: number;
   cidade: string;
   bairro: string;
   endereco: string;
@@ -105,6 +130,9 @@ export const empreendimentos: Empreendimento[] = [
     tagline: "O novo centro da vida urbana de Chapecó.",
     status: "lancamento",
     categoria: "Salas comerciais",
+    tipoImovel: "comercial",
+    operacoes: ["comprar"],
+    precoVenda: 250000, // a partir de (ilustrativo)
     cidade: "Chapecó",
     bairro: "Maria Goretti",
     endereco: "Rua Assis Brasil, 140 — Maria Goretti, Chapecó/SC",
@@ -114,9 +142,9 @@ export const empreendimentos: Empreendimento[] = [
     resumo:
       "Salas comerciais flexíveis e integráveis, de 20 a 64 m², em uma das regiões mais nobres de Chapecó. Negócios, lazer e estilo de vida reunidos em um só endereço.",
     descricao: [
-      "O Valley é o lugar onde tudo converge: morar perto, trabalhar perto, viver melhor. Um espaço que conecta negócios, lazer e estilo de vida — o novo centro da vida urbana de Chapecó.",
+      "O Valley é o lugar onde tudo converge: morar perto, trabalhar perto, viver melhor. Um espaço que conecta negócios, lazer e estilo de vida: o novo centro da vida urbana de Chapecó.",
       "Localizado em uma das regiões mais nobres da cidade, na Rua Assis Brasil, 140, no bairro Maria Goretti, o Valley ocupa um endereço privilegiado e ainda pouco explorado por prédios comerciais.",
-      "São salas comerciais de 20 a 64 m² de área privativa, em três tipologias que podem ser integradas para acompanhar o crescimento da sua empresa — todas com vista panorâmica e opções em diferentes orientações solares.",
+      "São salas comerciais de 20 a 64 m² de área privativa, em três tipologias que podem ser integradas para acompanhar o crescimento da sua empresa, todas com vista panorâmica e opções em diferentes orientações solares.",
       "Do térreo, com café aberto ao público, ao rooftop bar com vista panorâmica, o empreendimento reúne auditório para até 80 pessoas, salas de reunião, espaço de eventos multiuso, academia no conceito Studio Personal, mini mercado self-service e espaço de descompressão. No Valley, cada minuto vale mais: para sua empresa, para sua vida, para o seu futuro.",
     ],
     numeros: [
@@ -129,7 +157,7 @@ export const empreendimentos: Empreendimento[] = [
       {
         icon: "rooftop",
         titulo: "Rooftop bar",
-        desc: "Bar no topo da torre, com vista panorâmica para a cidade — para receber clientes ou celebrar resultados.",
+        desc: "Bar no topo da torre, com vista panorâmica para a cidade, ideal para receber clientes ou celebrar resultados.",
       },
       {
         icon: "auditorio",
@@ -339,4 +367,9 @@ export function getDestaques(): Empreendimento[] {
 /** Todas as imagens da galeria, achatadas (para lightbox e contagem). */
 export function getTodasImagens(e: Empreendimento) {
   return e.galeria.flatMap((c) => c.imagens);
+}
+
+/** Categorias distintas disponíveis (alimenta o dropdown "Tipo" da busca). */
+export function getCategorias(): string[] {
+  return Array.from(new Set(empreendimentos.map((e) => e.categoria))).sort();
 }

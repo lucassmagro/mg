@@ -61,7 +61,7 @@ export default function ContatoPage() {
             linhas={marca.horario.map((h) => `${h.dias}: ${h.horas}`)}
           />
 
-          <div className="flex flex-col justify-center rounded-2xl border border-ink/10 bg-surface p-6 shadow-card md:col-span-2 lg:col-span-2">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-ink/10 bg-surface p-6 text-center shadow-card md:col-span-2 lg:col-span-2">
             <p className="font-serif text-xl text-ink">
               Prefere falar agora?
             </p>
@@ -69,16 +69,16 @@ export default function ContatoPage() {
               Chame nossa equipe no WhatsApp e receba o material do Valley
               Business Center.
             </p>
-            <a
-              href={whatsappLink("Olá! Gostaria de mais informações.")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-whatsapp mt-4 w-full sm:w-auto sm:self-start sm:px-8"
-            >
-              <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              Falar no WhatsApp
-            </a>
-            <div className="mt-5 flex items-center gap-3">
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href={whatsappLink("Olá! Gostaria de mais informações.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp px-7"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                Falar no WhatsApp
+              </a>
               <a
                 href={marca.instagram}
                 target="_blank"
@@ -112,7 +112,7 @@ export default function ContatoPage() {
             height="420"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="block"
+            className="block dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
           />
         </div>
       </section>
@@ -130,7 +130,7 @@ function InfoCard({
   linhas: string[];
 }) {
   return (
-    <div className="flex gap-4 rounded-2xl border border-ink/10 bg-surface p-6 shadow-card">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-ink/10 bg-surface p-6 text-center shadow-card">
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
         <Icon className="h-5 w-5" />
       </span>

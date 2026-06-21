@@ -9,8 +9,13 @@ import {
   Compass,
   TrendingUp,
 } from "lucide-react";
-import { getDestaques } from "@/data/empreendimentos";
+import {
+  getDestaques,
+  getCategorias,
+  empreendimentos,
+} from "@/data/empreendimentos";
 import CarrosselRenders from "@/components/CarrosselRenders";
+import HeroBusca from "@/components/HeroBusca";
 import { iconeDiferencial } from "@/lib/diferencialIcons";
 import { marca, whatsappLink } from "@/lib/config";
 
@@ -42,71 +47,12 @@ export default function HomePage() {
 
   return (
     <>
-      {/* HERO — empreendimento em destaque */}
-      <section className="px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8">
-        <div className="relative isolate overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src="/projetos/valley-business/capa/06-voo-do-passaro-detalhe.jpg"
-              alt={`Vista do empreendimento ${destaque.nome}`}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-            {/* gradiente: escuro à esquerda (texto legível) → transparente à direita (imagem à mostra) */}
-            <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/55 to-ink/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
-          </div>
-
-          <div className="flex min-h-[560px] flex-col justify-center px-6 py-20 sm:px-10 lg:min-h-[640px] lg:px-14">
-            <div className="max-w-2xl">
-              <p className="eyebrow text-accent-200">
-                Lançamento · {destaque.cidade} — SC
-              </p>
-              <h1 className="mt-4 font-serif text-4xl font-semibold leading-[1.05] text-white sm:text-5xl lg:text-6xl">
-                {destaque.tagline}
-              </h1>
-              <p className="mt-5 max-w-xl text-lg text-white/85">
-                {destaque.resumo}
-              </p>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link
-                  href={`/empreendimentos/${destaque.id}`}
-                  className="btn-primary px-7 py-4 text-base"
-                >
-                  Conhecer o {destaque.nome}
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-                <a
-                  href={whatsappLink(
-                    `Olá! Tenho interesse no ${destaque.nome}. Pode me enviar mais informações?`,
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn inline-flex bg-white/10 px-7 py-4 text-base text-white backdrop-blur-sm hover:bg-white/20"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Falar no WhatsApp
-                </a>
-              </div>
-
-              {/* Números do empreendimento */}
-              <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-white/20 pt-8 sm:grid-cols-4">
-                {destaque.numeros.map((n) => (
-                  <div key={n.label}>
-                    <dt className="font-serif text-2xl font-semibold text-white sm:text-3xl">
-                      {n.valor}
-                    </dt>
-                    <dd className="mt-1 text-xs text-white/70">{n.label}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* HERO + BUSCA DE IMÓVEIS */}
+      <HeroBusca
+        destaque={destaque}
+        lista={empreendimentos}
+        categorias={getCategorias()}
+      />
 
       {/* QUEM SOMOS */}
       <section className="container-x py-20">
@@ -123,7 +69,7 @@ export default function HomePage() {
               desenho dos espaços e à qualidade de cada detalhe.
             </p>
             <p className="mt-4 leading-relaxed text-ink-soft">
-              Acreditamos que um bom imóvel é, antes de tudo, uma boa decisão —
+              Acreditamos que um bom imóvel é, antes de tudo, uma boa decisão,
               que valoriza com o tempo e melhora o dia a dia de quem o ocupa.
             </p>
             <Link

@@ -17,10 +17,10 @@ export const marca = {
   creci: "CRECI/SC 0000-J",
 
   // Contato
-  telefone: "(49) 3000-0000",
-  whatsapp: "5549999990000", // só dígitos, com DDI 55 — usado nos links wa.me
-  whatsappLabel: "(49) 99999-0000",
-  email: "contato@mgincorporacoes.com.br",
+  telefone: "(49) 3304-0094",
+  whatsapp: "554933040094", // só dígitos, com DDI 55 — usado nos links wa.me
+  whatsappLabel: "(49) 3304-0094",
+  email: "adm.mgincorporacoes@gmail.com",
 
   // Endereço
   endereco: "Av. Getúlio Vargas, 1500 — 12º andar",
