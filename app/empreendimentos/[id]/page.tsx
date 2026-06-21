@@ -58,7 +58,7 @@ export default function EmpreendimentoPage({
       <section className="relative isolate overflow-hidden">
         <HeroCarrossel imagens={e.galeria[0].imagens} />
 
-        <div className="container-x flex min-h-[520px] flex-col justify-end py-14 lg:min-h-[600px]">
+        <div className="container-x flex min-h-[80vh] flex-col justify-end py-14 lg:min-h-[88vh]">
           <nav
             aria-label="Trilha de navegação"
             className="mb-auto flex flex-wrap items-center gap-1.5 pt-6 text-sm text-white/70"
