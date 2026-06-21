@@ -19,6 +19,7 @@ import {
 import { iconeDiferencial } from "@/lib/diferencialIcons";
 import { marca, whatsappLink } from "@/lib/config";
 import GaleriaCategorizada from "@/components/GaleriaCategorizada";
+import HeroCarrossel from "@/components/HeroCarrossel";
 import Tipologias from "@/components/Tipologias";
 import VisitForm from "@/components/VisitForm";
 
@@ -55,17 +56,7 @@ export default function EmpreendimentoPage({
     <div className="bg-sand-50">
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <Image
-            src={e.capa}
-            alt={`Fachada do empreendimento ${e.nome}`}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/40 to-ink/80" />
-        </div>
+        <HeroCarrossel imagens={e.galeria[0].imagens} />
 
         <div className="container-x flex min-h-[520px] flex-col justify-end py-14 lg:min-h-[600px]">
           <nav
