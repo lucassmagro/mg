@@ -18,7 +18,9 @@ export default function Footer() {
     <footer className="mt-24 bg-accent-950 text-sand-100">
       <div className="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
         <div className="lg:pr-6">
-          <Logo variant="light" orientation="stacked" />
+          <div className="inline-flex rounded-2xl bg-white p-5">
+            <Logo variant="dark" orientation="stacked" />
+          </div>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-sand-100/70">
             {marca.descricaoCurta}
           </p>
