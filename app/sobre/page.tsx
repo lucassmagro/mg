@@ -163,7 +163,7 @@ export default function SobrePage() {
             Vamos conversar sobre o seu próximo investimento?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/80">
-            Conheça o Valley Business e os próximos lançamentos da{" "}
+            Conheça o Valley Business Center e os próximos lançamentos da{" "}
             {marca.nome}.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

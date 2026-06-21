@@ -31,8 +31,8 @@ export default function ContatoPage() {
             Contato
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-ink-soft">
-            Quer conhecer o Valley Business, receber plantas e condições ou
-            falar sobre os próximos lançamentos? Estamos por aqui para
+            Quer conhecer o Valley Business Center, receber plantas e condições
+            ou falar sobre os próximos lançamentos? Estamos por aqui para
             conversar com você.
           </p>
         </div>
@@ -67,7 +67,7 @@ export default function ContatoPage() {
             </p>
             <p className="mt-1 text-sm text-ink-soft">
               Chame nossa equipe no WhatsApp e receba o material do Valley
-              Business.
+              Business Center.
             </p>
             <a
               href={whatsappLink("Olá! Gostaria de mais informações.")}

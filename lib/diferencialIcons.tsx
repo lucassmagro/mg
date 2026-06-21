@@ -8,6 +8,10 @@ import {
   ShieldCheck,
   MapPin,
   Building2,
+  CalendarDays,
+  Sofa,
+  ShoppingCart,
+  Bike,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,6 +25,10 @@ export const DIFERENCIAL_ICONS: Record<string, LucideIcon> = {
   cafe: Coffee,
   seguranca: ShieldCheck,
   localizacao: MapPin,
+  eventos: CalendarDays,
+  descompressao: Sofa,
+  mercado: ShoppingCart,
+  mobilidade: Bike,
 };
 
 export function iconeDiferencial(chave: string): LucideIcon {
