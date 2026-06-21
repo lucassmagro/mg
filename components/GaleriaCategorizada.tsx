@@ -60,16 +60,14 @@ export default function GaleriaCategorizada({
         ))}
       </div>
 
-      {/* Grade de imagens */}
+      {/* Grade de imagens — uniforme e alinhada */}
       <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {imagens.map((img, i) => (
           <button
             key={img.src}
             type="button"
             onClick={() => setLightbox(i)}
-            className={`group relative overflow-hidden rounded-xl bg-sand-200 ${
-              i === 0 ? "col-span-2 aspect-[16/10] lg:col-span-2 lg:row-span-2" : "aspect-[4/3]"
-            }`}
+            className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-sand-200"
             aria-label={`Ampliar: ${img.alt}`}
           >
             <Image
