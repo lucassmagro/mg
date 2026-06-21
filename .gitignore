@@ -1,0 +1,15 @@
+/node_modules
+/.next/
+/out/
+/build
+.DS_Store
+*.pem
+npm-debug.log*
+.env*.local
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+
+# Mídia pesada — não versionar (originais e vídeos acima do limite do GitHub)
+/assets/projetos/
+public/projetos/valley-business/videos/*.mp4
