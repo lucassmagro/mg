@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function ContatoPage() {
   const mapaQuery = encodeURIComponent(
-    `${marca.bairro}, ${marca.cidade} - ${marca.uf}`,
+    `${marca.endereco}, ${marca.bairro}, ${marca.cidade} - ${marca.uf}`,
   );
 
   return (

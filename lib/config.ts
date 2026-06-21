@@ -23,11 +23,11 @@ export const marca = {
   email: "adm.mgincorporacoes@gmail.com",
 
   // Endereço
-  endereco: "Av. Getúlio Vargas, 1500 — 12º andar",
+  endereco: "Av. Fernando Machado, 141-E — Ed. Il Centenário, Sala 205",
   bairro: "Centro",
   cidade: "Chapecó",
   uf: "SC",
-  cep: "89802-000",
+  cep: "89802-112",
 
   // Horário de atendimento
   horario: [
