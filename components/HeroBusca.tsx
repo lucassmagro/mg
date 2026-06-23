@@ -27,7 +27,8 @@ const FAIXAS_ALUGUEL = [
   { label: "Acima de R$ 8.000", max: Infinity },
 ];
 
-const FINALIDADES: TipoImovel[] = ["residencial", "industrial", "comercial"];
+/** Segmentos de atuação da empresa (sem "industrial"). */
+const FINALIDADES: TipoImovel[] = ["residencial", "comercial"];
 
 export default function HeroBusca({
   destaque,
@@ -46,9 +47,34 @@ export default function HeroBusca({
 
   const faixas = operacao === "comprar" ? FAIXAS_VENDA : FAIXAS_ALUGUEL;
 
+  // Imóveis que aceitam a operação atual — base para os filtros dinâmicos.
+  const disponiveis = useMemo(
+    () => lista.filter((e) => e.operacoes.includes(operacao)),
+    [lista, operacao],
+  );
+
+  // Só mostramos as finalidades/tipos que realmente existem para a operação
+  // escolhida (ex.: ao selecionar "Comprar", lista apenas o que está à venda).
+  const finalidadesDisp = useMemo(
+    () => FINALIDADES.filter((f) => disponiveis.some((e) => e.tipoImovel === f)),
+    [disponiveis],
+  );
+  const categoriasDisp = useMemo(
+    () =>
+      categorias.filter((c) =>
+        disponiveis.some(
+          (e) =>
+            e.categoria === c && (!finalidade || e.tipoImovel === finalidade),
+        ),
+      ),
+    [categorias, disponiveis, finalidade],
+  );
+
   function trocarOperacao(op: Operacao) {
     setOperacao(op);
     setValorMaxIdx(null); // as faixas mudam entre comprar e alugar
+    setFinalidade(null); // finalidades/tipos se adaptam à nova operação
+    setCategoria("todos");
   }
 
   const resultados = useMemo(() => {
@@ -132,13 +158,16 @@ export default function HeroBusca({
                       <Building2 className="h-3.5 w-3.5 text-accent-200" aria-hidden="true" />
                       Finalidade
                     </span>
-                    <div className="mt-1.5 flex flex-wrap gap-2">
-                      {FINALIDADES.map((f) => {
+                    <div className="mt-1.5 flex min-h-[4.75rem] flex-wrap content-center gap-2">
+                      {finalidadesDisp.map((f) => {
                         const ativo = finalidade === f;
                         return (
                           <button
                             key={f}
-                            onClick={() => setFinalidade(ativo ? null : f)}
+                            onClick={() => {
+                              setFinalidade(ativo ? null : f);
+                              setCategoria("todos"); // tipos se ajustam à finalidade
+                            }}
                             aria-pressed={ativo}
                             className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
                               ativo
@@ -183,7 +212,7 @@ export default function HeroBusca({
                       ariaLabel="Tipo do imóvel"
                     >
                       <option value="todos">Tipo do imóvel</option>
-                      {categorias.map((c) => (
+                      {categoriasDisp.map((c) => (
                         <option key={c} value={c}>
                           {c}
                         </option>
