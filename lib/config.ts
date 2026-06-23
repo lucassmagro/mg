@@ -10,7 +10,7 @@ export const marca = {
   tagline: "Empreendimentos que valorizam o seu futuro",
   descricaoCurta:
     "Incorporadora dedicada a projetos que unem arquitetura, localização e qualidade construtiva.",
-  fundadaEm: 2009,
+  fundadaEm: 2005,
 
   // Registros (placeholders — substituir pelos reais)
   cnpj: "00.000.000/0001-00",

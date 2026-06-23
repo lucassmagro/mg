@@ -72,9 +72,28 @@ export default function HomePage() {
               Acreditamos que um bom imóvel é, antes de tudo, uma boa decisão,
               que valoriza com o tempo e melhora o dia a dia de quem o ocupa.
             </p>
+
+            {/* Selo de solidez */}
+            <div className="mt-7 inline-flex items-center gap-4 rounded-2xl border border-accent-200 bg-accent-50 py-3 pl-3 pr-5">
+              <span className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-full bg-accent-600 text-white">
+                <span className="font-serif text-lg font-semibold leading-none">
+                  20+
+                </span>
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-white/85">
+                  anos
+                </span>
+              </span>
+              <span className="text-sm font-semibold text-brand">
+                Mais de 20 anos de atuação
+                <span className="mt-0.5 block text-xs font-normal text-ink-muted">
+                  Solidez e tradição desde {marca.fundadaEm}.
+                </span>
+              </span>
+            </div>
+
             <Link
               href="/sobre"
-              className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-brand"
+              className="group mt-7 flex items-center gap-2 text-sm font-semibold text-brand"
             >
               Conheça a {marca.nomeCurto}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

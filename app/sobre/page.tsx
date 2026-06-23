@@ -10,13 +10,6 @@ export const metadata: Metadata = {
     "Conheça a MG Incorporações: história, propósito e a forma de trabalhar de uma incorporadora dedicada a empreendimentos de alto padrão.",
 };
 
-const numeros = [
-  { valor: "15+", label: "anos de atuação" },
-  { valor: "12", label: "empreendimentos entregues" },
-  { valor: "180 mil m²", label: "construídos" },
-  { valor: "2.500+", label: "clientes atendidos" },
-];
-
 const valores = [
   {
     icon: Target,
@@ -76,8 +69,7 @@ export default function SobrePage() {
               melhoram a rotina de quem os ocupa.
             </p>
             <p className="mt-4 leading-relaxed text-ink-soft">
-              Cuidamos de cada projeto da concepção à entrega, com uma equipe
-              que acredita que incorporar é, antes de tudo, assumir um
+              Nossa equipe acredita que incorporar é, antes de tudo, assumir um
               compromisso de longo prazo com a cidade e com o cliente.
             </p>
             <Link href="/empreendimentos" className="btn-primary mt-7 px-6 py-3.5">
@@ -98,17 +90,26 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* Números */}
+      {/* Selo de solidez */}
       <section className="bg-accent-700">
-        <div className="container-x grid grid-cols-2 gap-8 py-14 lg:grid-cols-4">
-          {numeros.map((n) => (
-            <div key={n.label} className="text-center">
-              <p className="font-serif text-4xl font-semibold text-white sm:text-5xl">
-                {n.valor}
-              </p>
-              <p className="mt-2 text-sm text-white/80">{n.label}</p>
-            </div>
-          ))}
+        <div className="container-x flex flex-col items-center justify-center gap-6 py-14 text-center sm:flex-row sm:text-left">
+          <span className="flex h-24 w-24 shrink-0 flex-col items-center justify-center rounded-full border-2 border-white/30 text-white">
+            <span className="font-serif text-3xl font-semibold leading-none">
+              20+
+            </span>
+            <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+              anos
+            </span>
+          </span>
+          <div>
+            <p className="font-serif text-3xl font-semibold text-white sm:text-4xl">
+              Mais de 20 anos de atuação
+            </p>
+            <p className="mt-2 max-w-xl text-white/80">
+              Solidez e tradição construindo o futuro de {marca.cidade} desde{" "}
+              {marca.fundadaEm}.
+            </p>
+          </div>
         </div>
       </section>
 
