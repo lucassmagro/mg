@@ -4,7 +4,11 @@ import { MapPin, ArrowRight } from "lucide-react";
 import type { Empreendimento } from "@/data/empreendimentos";
 import { STATUS_LABEL } from "@/data/empreendimentos";
 
-/** Card de empreendimento reutilizado na home e na listagem. */
+/**
+ * Card de empreendimento reutilizado na home e na listagem.
+ * Toda a área do card é clicável: um único link "esticado" (after:inset-0)
+ * cobre o `article`, melhorando o toque em smartphones.
+ */
 export default function EmpreendimentoCard({
   empreendimento: e,
   priority = false,
@@ -13,11 +17,8 @@ export default function EmpreendimentoCard({
   priority?: boolean;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
-      <Link
-        href={`/empreendimentos/${e.id}`}
-        className="relative block aspect-[4/3] overflow-hidden"
-      >
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
+      <div className="relative block aspect-[4/3] overflow-hidden">
         <Image
           src={e.cartao}
           alt={`Imagem do empreendimento ${e.nome}`}
@@ -34,13 +35,13 @@ export default function EmpreendimentoCard({
             {e.categoria}
           </span>
         </div>
-      </Link>
+      </div>
 
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-serif text-2xl text-ink">
           <Link
             href={`/empreendimentos/${e.id}`}
-            className="transition-colors hover:text-brand"
+            className="transition-colors after:absolute after:inset-0 group-hover:text-brand focus-visible:outline-none"
           >
             {e.nome}
           </Link>
@@ -56,13 +57,10 @@ export default function EmpreendimentoCard({
           {e.resumo}
         </p>
 
-        <Link
-          href={`/empreendimentos/${e.id}`}
-          className="group/link mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand"
-        >
+        <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand">
           Conhecer o empreendimento
-          <ArrowRight className="h-4 w-4 transition-transform group-hover/link:translate-x-1" />
-        </Link>
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </span>
       </div>
     </article>
   );
