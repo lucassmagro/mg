@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, MessageCircle } from "lucide-react";
-import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 import { marca, navLinks, whatsappLink } from "@/lib/config";
 
 export default function Header() {
@@ -14,7 +13,11 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    // Histerese: liga em >24px, desliga só em <8px, para não "piscar" no limiar.
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled((s) => (s ? y > 8 : y > 24));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -30,14 +33,28 @@ export default function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+      className={`sticky top-0 z-50 border-b backdrop-blur-xl transition-all duration-300 ${
         scrolled
-          ? "border-ink/10 bg-sand-50/90 backdrop-blur-md"
-          : "border-transparent bg-sand-50"
+          ? "border-ink/10 bg-sand-50/75 shadow-card"
+          : "border-transparent bg-sand-50/50"
       }`}
     >
-      <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-20">
-        <Logo themed />
+      <div className="container-x flex h-20 items-center justify-between gap-4 lg:h-24">
+        <Link
+          href="/"
+          aria-label={`${marca.nome} — página inicial`}
+          className="inline-flex items-center"
+        >
+          <Image
+            src="/logo/mark.svg"
+            alt={marca.nome}
+            width={130}
+            height={114}
+            priority
+            unoptimized
+            className="h-12 w-auto lg:h-16"
+          />
+        </Link>
 
         <nav
           aria-label="Navegação principal"
@@ -63,7 +80,6 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <a
             href={whatsappLink(
               "Olá! Vi o site e gostaria de mais informações.",
@@ -90,7 +106,7 @@ export default function Header() {
 
       {/* Menu mobile */}
       {open && (
-        <div className="border-t border-ink/10 bg-sand-50 lg:hidden">
+        <div className="border-t border-ink/10 bg-sand-50/90 backdrop-blur-xl lg:hidden">
           <nav
             aria-label="Navegação principal"
             className="container-x flex flex-col gap-1 py-4"
