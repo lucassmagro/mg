@@ -148,6 +148,22 @@ export default function Footer() {
           </p>
         </div>
       </div>
+
+      <div className="bg-[#05101f]">
+        <div className="container-x py-3 text-center text-xs text-white/50">
+          <p>
+            Feito por{" "}
+            <a
+              href="https://lucasmagro.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white/75 underline-offset-2 transition-colors hover:text-white hover:underline"
+            >
+              Lucas Santos Magro
+            </a>
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }
