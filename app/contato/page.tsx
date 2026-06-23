@@ -112,7 +112,7 @@ export default function ContatoPage() {
             height="420"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="block dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+            className="block"
           />
         </div>
       </section>
@@ -130,7 +130,7 @@ function InfoCard({
   linhas: string[];
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-ink/10 bg-surface p-6 text-center shadow-card">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-ink/10 bg-surface p-6 text-center shadow-card">
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
         <Icon className="h-5 w-5" />
       </span>
