@@ -53,12 +53,7 @@ export default function HeroBusca({
     [lista, operacao],
   );
 
-  // Só mostramos as finalidades/tipos que realmente existem para a operação
-  // escolhida (ex.: ao selecionar "Comprar", lista apenas o que está à venda).
-  const finalidadesDisp = useMemo(
-    () => FINALIDADES.filter((f) => disponiveis.some((e) => e.tipoImovel === f)),
-    [disponiveis],
-  );
+  // O "Tipo" (categoria) ainda se adapta à operação/finalidade escolhida.
   const categoriasDisp = useMemo(
     () =>
       categorias.filter((c) =>
@@ -138,10 +133,10 @@ export default function HeroBusca({
                       role="tab"
                       aria-selected={ativo}
                       onClick={() => trocarOperacao(op)}
-                      className={`rounded-t-xl px-6 py-2.5 text-sm font-semibold ring-1 backdrop-blur-md transition-colors ${
+                      className={`-mb-px rounded-t-xl border border-b-0 px-6 py-2.5 text-sm font-semibold backdrop-blur-md transition-colors ${
                         ativo
-                          ? "bg-white/20 text-white shadow-lg ring-white/30"
-                          : "bg-white/5 text-white/70 ring-white/15 hover:bg-white/15 hover:text-white"
+                          ? "border-white/20 bg-white/10 text-white"
+                          : "border-white/15 bg-white/5 text-white/70 hover:bg-white/15 hover:text-white"
                       }`}
                     >
                       {op === "alugar" ? "Alugar" : "Comprar"}
@@ -150,7 +145,7 @@ export default function HeroBusca({
                 })}
               </div>
 
-              <div className="rounded-2xl rounded-tl-none bg-white/10 p-4 shadow-2xl ring-1 ring-white/20 backdrop-blur-md sm:p-5">
+              <div className="rounded-2xl rounded-tl-none border border-t-0 border-white/20 bg-white/10 p-4 shadow-2xl backdrop-blur-md sm:p-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                   {/* Finalidade — chips */}
                   <div className="flex-1">
@@ -159,7 +154,7 @@ export default function HeroBusca({
                       Finalidade
                     </span>
                     <div className="mt-1.5 flex min-h-[4.75rem] flex-wrap content-center gap-2">
-                      {finalidadesDisp.map((f) => {
+                      {FINALIDADES.map((f) => {
                         const ativo = finalidade === f;
                         return (
                           <button
