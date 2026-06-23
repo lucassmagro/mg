@@ -5,7 +5,6 @@ import {
   Mail,
   Clock,
   Instagram,
-  Facebook,
   MessageCircle,
 } from "lucide-react";
 import { marca, whatsappLink } from "@/lib/config";
@@ -88,15 +87,6 @@ export default function ContatoPage() {
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-brand"
               >
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href={marca.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:border-accent-600 hover:text-brand"
-              >
-                <Facebook className="h-5 w-5" />
               </a>
             </div>
           </div>

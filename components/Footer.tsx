@@ -1,8 +1,6 @@
 import Link from "next/link";
 import {
   Instagram,
-  Facebook,
-  Linkedin,
   MapPin,
   Phone,
   Mail,
@@ -33,24 +31,6 @@ export default function Footer() {
               className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-white/40 hover:text-white"
             >
               <Instagram className="h-5 w-5" />
-            </a>
-            <a
-              href={marca.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-white/40 hover:text-white"
-            >
-              <Linkedin className="h-5 w-5" />
-            </a>
-            <a
-              href={marca.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition-colors hover:border-white/40 hover:text-white"
-            >
-              <Facebook className="h-5 w-5" />
             </a>
             <a
               href={whatsappLink()}

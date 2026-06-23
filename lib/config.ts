@@ -12,8 +12,8 @@ export const marca = {
     "Incorporadora dedicada a projetos que unem arquitetura, localização e qualidade construtiva.",
   fundadaEm: 2005,
 
-  // Registros (placeholders — substituir pelos reais)
-  cnpj: "00.000.000/0001-00",
+  // Registros
+  cnpj: "07.459.802/0001-03",
   creci: "CRECI/SC 0000-J",
 
   // Contato
@@ -37,10 +37,8 @@ export const marca = {
     { dias: "Domingo", horas: "Fechado" },
   ],
 
-  // Redes sociais (placeholders)
-  instagram: "https://instagram.com",
-  facebook: "https://facebook.com",
-  linkedin: "https://linkedin.com",
+  // Redes sociais
+  instagram: "https://www.instagram.com/mg_incorporacoes/",
 } as const;
 
 /** Monta um link wa.me com mensagem pré-preenchida. */
