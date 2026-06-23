@@ -45,6 +45,7 @@ export default function ContatoPage() {
             titulo="Endereço"
             linhas={[
               marca.endereco,
+              marca.complemento,
               `${marca.bairro}, ${marca.cidade} — ${marca.uf}`,
               `CEP ${marca.cep}`,
             ]}

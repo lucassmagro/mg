@@ -23,7 +23,8 @@ export const marca = {
   email: "adm.mgincorporacoes@gmail.com",
 
   // Endereço
-  endereco: "Av. Fernando Machado, 141-E — Ed. Il Centenário, Sala 205",
+  endereco: "Av. Fernando Machado, 141-E",
+  complemento: "Ed. Il Centenário — Sala 205",
   bairro: "Centro",
   cidade: "Chapecó",
   uf: "SC",

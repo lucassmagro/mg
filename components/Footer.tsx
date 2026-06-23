@@ -92,6 +92,8 @@ export default function Footer() {
               <span>
                 {marca.endereco}
                 <br />
+                {marca.complemento}
+                <br />
                 {marca.bairro}, {marca.cidade} — {marca.uf}
                 <br />
                 CEP {marca.cep}
