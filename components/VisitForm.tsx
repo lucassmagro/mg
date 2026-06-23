@@ -12,7 +12,7 @@ export default function VisitForm({ titulo }: { titulo: string }) {
 
   if (enviado) {
     return (
-      <div className="rounded-xl border border-accent-200 bg-accent-50 p-5 text-center dark:border-accent-400/30 dark:bg-accent-400/10">
+      <div className="rounded-xl border border-accent-200 bg-accent-50 p-5 text-center">
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-white">
           <Check className="h-6 w-6" />
         </span>

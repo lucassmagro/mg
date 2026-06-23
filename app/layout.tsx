@@ -34,17 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="pt-BR"
-      suppressHydrationWarning
-      className={`${fraunces.variable} ${inter.variable}`}
-    >
+    <html lang="pt-BR" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();`,
-          }}
-        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

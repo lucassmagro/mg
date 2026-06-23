@@ -96,12 +96,11 @@ As páginas leem **só** desse arquivo. Os componentes recebem os dados por prop
   `btn-whatsapp`, `eyebrow` (rótulo pequeno em caixa alta), `field` / `label`
   (formulários), `no-scrollbar`. Sombras: `shadow-card` / `shadow-card-hover`.
 - **Tipografia:** `font-serif` (Fraunces) em títulos, `font-sans` (Inter) no corpo.
-- **Dark mode:** `darkMode: "class"` + tokens via CSS vars em [`app/globals.css`](app/globals.css)
-  (`:root` claro / `.dark` escuro). `sand` (fundos), `ink` (texto), `surface`
-  (cartões) e `brand` (azul de texto/ícones) trocam sozinhos. `night` é fixo
-  (overlays sobre fotos). Toggle: [`components/ThemeToggle.tsx`](components/ThemeToggle.tsx);
-  script anti-flash em [`app/layout.tsx`](app/layout.tsx). Botões brancos sobre
-  faixas azuis usam `bg-[#ffffff]`/`text-[#0d4185]` fixos.
+- **Tema único (claro):** tokens via CSS vars em [`app/globals.css`](app/globals.css)
+  (`:root`). `sand` (fundos), `ink` (texto), `surface` (cartões) e `brand` (azul
+  de texto/ícones). `night` é fixo (overlays sobre fotos). O site é
+  predominantemente claro (sem modo noturno). Botões brancos sobre faixas azuis
+  usam `bg-[#ffffff]`/`text-[#0d4185]` fixos.
 
 ## Convenções
 

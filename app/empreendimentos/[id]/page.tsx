@@ -314,7 +314,7 @@ export default function EmpreendimentoPage({
                 height="320"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="block dark:[filter:invert(0.92)_hue-rotate(180deg)_brightness(0.95)_contrast(0.9)]"
+                className="block"
               />
             </div>
           </div>

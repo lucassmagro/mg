@@ -7,19 +7,21 @@ import { marca } from "@/lib/config";
  * - orientation "horizontal": marca + "INCORPORAÇÕES" lado a lado (cabeçalho).
  * - orientation "stacked": marca acima de "INCORPORAÇÕES" (rodapé).
  * - variant "dark"/"light": versão para fundo claro/escuro.
- * - themed: usa SEMPRE o logo colorido oficial; no tema escuro ele fica sobre
- *   uma placa branca (não existe versão branca da marca) — usado no cabeçalho.
+ * - themed: usa o logo colorido oficial — usado no cabeçalho (fundo claro).
  */
 export default function Logo({
   variant = "dark",
   orientation = "horizontal",
   themed = false,
   className = "",
+  imgClassName,
 }: {
   variant?: "dark" | "light";
   orientation?: "horizontal" | "stacked";
   themed?: boolean;
   className?: string;
+  /** Sobrescreve o tamanho da imagem (ex.: logo stacked menor no cabeçalho). */
+  imgClassName?: string;
 }) {
   const sources = {
     horizontal: {
@@ -44,19 +46,16 @@ export default function Logo({
       className={`inline-flex items-center ${className}`}
     >
       {themed ? (
-        // Logo colorido oficial; no tema escuro, sobre placa branca para
-        // manter o lettering legível (não há versão branca da marca).
-        <span className="inline-flex items-center rounded-lg dark:bg-white dark:px-2.5 dark:py-1.5">
-          <Image
-            src={sources[orientation].dark}
-            alt={marca.nome}
-            width={dims.width}
-            height={dims.height}
-            priority
-            unoptimized
-            className={dims.cls}
-          />
-        </span>
+        // Logo colorido oficial (cabeçalho, sobre fundo claro).
+        <Image
+          src={sources[orientation].dark}
+          alt={marca.nome}
+          width={dims.width}
+          height={dims.height}
+          priority
+          unoptimized
+          className={imgClassName ?? dims.cls}
+        />
       ) : (
         <Image
           src={sources[orientation][variant]}
@@ -65,7 +64,7 @@ export default function Logo({
           height={dims.height}
           priority
           unoptimized
-          className={dims.cls}
+          className={imgClassName ?? dims.cls}
         />
       )}
     </Link>
