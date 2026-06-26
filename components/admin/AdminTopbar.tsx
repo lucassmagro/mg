@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { LogOut, Building2 } from "lucide-react";
 import { criarClienteBrowser } from "@/lib/supabase/client";
 
@@ -17,6 +18,7 @@ export default function AdminTopbar() {
   async function sair() {
     const supabase = criarClienteBrowser();
     await supabase.auth.signOut();
+    toast.success("Sessão encerrada.");
     router.replace("/admin/login");
     router.refresh();
   }

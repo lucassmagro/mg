@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import {
   Plus,
   Trash2,
@@ -96,7 +97,6 @@ export default function EmpreendimentoForm({
   const [e, setE] = useState<Empreendimento>(inicial ?? vazio());
   const [slugTocado, setSlugTocado] = useState(isEdit);
   const [salvando, setSalvando] = useState<null | "rascunho" | "publicar">(null);
-  const [erro, setErro] = useState<string | null>(null);
   const [aba, setAba] = useState<"editar" | "preview">("editar");
 
   function set<K extends keyof Empreendimento>(k: K, v: Empreendimento[K]) {
@@ -121,14 +121,14 @@ export default function EmpreendimentoForm({
   }
 
   async function salvar(publicar: boolean) {
-    setErro(null);
     setSalvando(publicar ? "publicar" : "rascunho");
     const r = await salvarEmpreendimento({ ...e, publicado: publicar });
     if (!r.ok) {
-      setErro(r.erro ?? "Erro ao salvar.");
+      toast.error(r.erro ?? "Erro ao salvar.");
       setSalvando(null);
       return;
     }
+    toast.success(publicar ? "Empreendimento publicado!" : "Rascunho salvo!");
     router.push("/admin");
     router.refresh();
   }
@@ -219,14 +219,6 @@ export default function EmpreendimentoForm({
           </div>
         </div>
       </div>
-
-      {erro && (
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-            {erro}
-          </p>
-        </div>
-      )}
 
       {/* PRÉ-VISUALIZAÇÃO ao vivo e EDITÁVEL: renderiza a página real do site */}
       {aba === "preview" && (

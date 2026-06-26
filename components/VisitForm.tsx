@@ -1,42 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Check } from "lucide-react";
+import { toast } from "react-toastify";
 
 /**
  * Formulário de interesse no empreendimento — apenas visual (protótipo).
- * Não envia dados; exibe uma confirmação simulada ao enviar.
+ * Não envia dados; exibe uma confirmação simulada (toast) ao enviar.
  */
 export default function VisitForm({ titulo }: { titulo: string }) {
-  const [enviado, setEnviado] = useState(false);
-
-  if (enviado) {
-    return (
-      <div className="rounded-xl border border-accent-200 bg-accent-50 p-5 text-center">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-600 text-white">
-          <Check className="h-6 w-6" />
-        </span>
-        <p className="mt-3 font-serif text-lg text-ink">Solicitação enviada!</p>
-        <p className="mt-1 text-sm text-ink-soft">
-          Nossa equipe de vendas entrará em contato para apresentar o
-          empreendimento e tirar suas dúvidas.
-        </p>
-        <button
-          type="button"
-          onClick={() => setEnviado(false)}
-          className="mt-4 text-sm font-semibold text-brand hover:text-brand"
-        >
-          Enviar nova solicitação
-        </button>
-      </div>
-    );
-  }
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setEnviado(true);
+        e.currentTarget.reset();
+        toast.success(
+          "Solicitação enviada! Nossa equipe de vendas entrará em contato.",
+        );
       }}
       className="space-y-3"
     >

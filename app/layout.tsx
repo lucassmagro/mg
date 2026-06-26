@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import { marca } from "@/lib/config";
@@ -35,6 +37,13 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
         <SiteChrome>{children}</SiteChrome>
+        <ToastContainer
+          position="top-right"
+          autoClose={4000}
+          theme="colored"
+          newestOnTop
+          pauseOnHover
+        />
       </body>
     </html>
   );

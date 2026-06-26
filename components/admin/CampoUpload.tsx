@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { toast } from "react-toastify";
 import { Upload, X, Loader2, FileVideo } from "lucide-react";
 import { criarClienteBrowser } from "@/lib/supabase/client";
 
@@ -34,17 +35,14 @@ export default function CampoUpload({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [enviando, setEnviando] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
-
   async function aoSelecionar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setErro(null);
 
     if (tipo === "video") {
       const mb = file.size / (1024 * 1024);
       if (mb > LIMITE_VIDEO_MB) {
-        setErro(
+        toast.warn(
           `Vídeo de ${mb.toFixed(0)} MB. Recomendamos até ${LIMITE_VIDEO_MB} MB para não estourar o armazenamento.`,
         );
       }
@@ -60,7 +58,7 @@ export default function CampoUpload({
       .upload(caminho, file, { upsert: true });
 
     if (error) {
-      setErro(`Falha no envio: ${error.message}`);
+      toast.error(`Falha no envio: ${error.message}`);
       setEnviando(false);
       return;
     }
@@ -132,7 +130,6 @@ export default function CampoUpload({
           onChange={aoSelecionar}
           className="hidden"
         />
-        {erro && <p className="mt-1.5 text-xs text-red-600">{erro}</p>}
       </div>
     </div>
   );

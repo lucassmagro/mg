@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
 import { Building2, Loader2 } from "lucide-react";
 import { criarClienteBrowser } from "@/lib/supabase/client";
 
@@ -12,12 +13,10 @@ function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
 
   async function entrar(e: React.FormEvent) {
     e.preventDefault();
-    setErro(null);
     setCarregando(true);
 
     const supabase = criarClienteBrowser();
@@ -27,11 +26,12 @@ function LoginForm() {
     });
 
     if (error) {
-      setErro("E-mail ou senha incorretos.");
+      toast.error("E-mail ou senha incorretos.");
       setCarregando(false);
       return;
     }
 
+    toast.success("Bem-vindo de volta!");
     router.replace(redirect);
     router.refresh();
   }
@@ -85,12 +85,6 @@ function LoginForm() {
               placeholder="••••••••"
             />
           </div>
-
-          {erro && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-              {erro}
-            </p>
-          )}
 
           <button
             type="submit"

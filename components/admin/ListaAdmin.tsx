@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { Pencil, Trash2, Star, Loader2, ExternalLink } from "lucide-react";
 import type { Empreendimento } from "@/data/empreendimentos";
 import { STATUS_LABEL } from "@/data/empreendimentos";
@@ -21,7 +22,14 @@ export default function ListaAdmin({
   function destacar(e: Empreendimento) {
     setAcaoId(e.id);
     startTransition(async () => {
-      await alternarDestaque(e.id, !e.destaque);
+      const r = await alternarDestaque(e.id, !e.destaque);
+      if (!r.ok) {
+        toast.error(r.erro ?? "Erro ao atualizar destaque.");
+      } else {
+        toast.success(
+          e.destaque ? "Destaque removido." : `"${e.nome}" agora é o destaque.`,
+        );
+      }
       router.refresh();
       setAcaoId(null);
     });
@@ -37,7 +45,11 @@ export default function ListaAdmin({
     setAcaoId(e.id);
     startTransition(async () => {
       const r = await excluirEmpreendimento(e.id);
-      if (!r.ok) alert(`Erro ao excluir: ${r.erro}`);
+      if (!r.ok) {
+        toast.error(`Erro ao excluir: ${r.erro}`);
+      } else {
+        toast.success(`"${e.nome}" excluído.`);
+      }
       router.refresh();
       setAcaoId(null);
     });

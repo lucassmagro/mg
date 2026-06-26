@@ -1,41 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Send } from "lucide-react";
+import { toast } from "react-toastify";
+import { Send } from "lucide-react";
 
 /** Formulário de contato — apenas visual (protótipo, não envia dados). */
 export default function ContactForm() {
-  const [enviado, setEnviado] = useState(false);
-
-  if (enviado) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-accent-200 bg-accent-50 px-6 py-16 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-600 text-white">
-          <Check className="h-7 w-7" />
-        </span>
-        <h3 className="mt-4 font-serif text-xl text-ink">
-          Mensagem enviada com sucesso!
-        </h3>
-        <p className="mt-2 max-w-sm text-sm text-ink-soft">
-          Obrigado pelo contato. Nossa equipe responderá no menor tempo
-          possível, normalmente no mesmo dia útil.
-        </p>
-        <button
-          type="button"
-          onClick={() => setEnviado(false)}
-          className="mt-5 text-sm font-semibold text-brand hover:text-brand"
-        >
-          Enviar outra mensagem
-        </button>
-      </div>
-    );
-  }
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setEnviado(true);
+        e.currentTarget.reset();
+        toast.success(
+          "Mensagem enviada! Responderemos no menor tempo possível.",
+        );
       }}
       className="space-y-4"
     >
