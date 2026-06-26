@@ -119,8 +119,11 @@ export interface Empreendimento {
 
 const IMG = "/projetos/valley-business/imgs";
 const PLANTA = "/projetos/valley-business/plantas";
-const VIDEO = "/projetos/valley-business/videos";
+const VIDEO = "/projetos/valley-business/videos"; // só o poster.jpg ainda vem daqui
 const CAPA = "/projetos/valley-business/capa";
+// Vídeos comprimidos servidos do Supabase Storage (bucket público).
+const VIDEO_CDN =
+  "https://aajhklcmblpqffanvjuq.supabase.co/storage/v1/object/public/empreendimentos/valley-business/videos";
 
 export const empreendimentos: Empreendimento[] = [
   {
@@ -310,22 +313,24 @@ export const empreendimentos: Empreendimento[] = [
         src: `${PLANTA}/ph-03-recreacao-32-pav.jpg`,
       },
     ],
+    // Vídeos comprimidos e hospedados no Supabase Storage (os MP4 originais,
+    // ~390 MB, não cabem no GitHub nem no Storage grátis). Posters seguem em /public.
     videos: [
       {
         titulo: "Valley Business — o filme",
-        src: `${VIDEO}/valley-filme.mp4`,
+        src: `${VIDEO_CDN}/valley-filme.mp4`,
         poster: `${VIDEO}/poster.jpg`,
         formato: "vertical",
       },
       {
         titulo: "Tour pela torre",
-        src: `${VIDEO}/valley-reels-1.mp4`,
+        src: `${VIDEO_CDN}/valley-reels-1.mp4`,
         poster: `${IMG}/18-rooftop-aerea.jpg`,
         formato: "vertical",
       },
       {
         titulo: "Áreas de convivência",
-        src: `${VIDEO}/valley-reels-2.mp4`,
+        src: `${VIDEO_CDN}/valley-reels-2.mp4`,
         poster: `${IMG}/19-rooftop-bar.jpg`,
         formato: "vertical",
       },
