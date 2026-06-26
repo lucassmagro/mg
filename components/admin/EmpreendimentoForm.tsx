@@ -228,7 +228,7 @@ export default function EmpreendimentoForm({
         </div>
       )}
 
-      {/* PRÉ-VISUALIZAÇÃO ao vivo: renderiza a página real do site */}
+      {/* PRÉ-VISUALIZAÇÃO ao vivo e EDITÁVEL: renderiza a página real do site */}
       {aba === "preview" && (
         <div className="border-t border-ink/10">
           {!e.nome ? (
@@ -236,7 +236,15 @@ export default function EmpreendimentoForm({
               Preencha ao menos o nome para ver a pré-visualização.
             </p>
           ) : (
-            <EmpreendimentoView e={e} />
+            <>
+              <p className="bg-amber-50 px-4 py-2 text-center text-xs text-amber-800">
+                Clique nos textos (destacados em amarelo) para editar direto na
+                página. Imagens, galeria, tipologias e adicionar/remover itens
+                ficam na aba <strong>Editar</strong>. Lembre de{" "}
+                <strong>Salvar</strong> ao terminar.
+              </p>
+              <EmpreendimentoView e={e} editavel onChange={setE} />
+            </>
           )}
         </div>
       )}

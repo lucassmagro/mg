@@ -18,11 +18,56 @@ import Tipologias from "@/components/Tipologias";
 import VisitForm from "@/components/VisitForm";
 
 /**
+ * Texto editável "no lugar". Fora do modo de edição, renderiza o texto puro
+ * (seguro para Server Component). No modo edição (só no painel), vira um campo
+ * contentEditable que confirma a alteração ao perder o foco (sem pular o cursor).
+ */
+function Campo({
+  editavel,
+  value,
+  onCommit,
+  className = "",
+}: {
+  editavel?: boolean;
+  value: string;
+  onCommit?: (v: string) => void;
+  className?: string;
+}) {
+  if (!editavel) return <>{value}</>;
+  return (
+    <span
+      contentEditable
+      suppressContentEditableWarning
+      onBlur={(ev) => onCommit?.(ev.currentTarget.textContent ?? "")}
+      className={`cursor-text rounded-sm outline-none ring-amber-400/0 transition-[box-shadow] hover:bg-amber-100/40 focus:bg-amber-50 focus:ring-2 focus:ring-amber-400 ${className}`}
+      title="Clique para editar"
+    >
+      {value}
+    </span>
+  );
+}
+
+/**
  * Renderização completa da página de um empreendimento. Componente "compartilhado"
  * (sem diretiva): é usado tanto pela página pública (server) quanto pela
- * pré-visualização ao vivo do painel (client).
+ * pré-visualização ao vivo do painel (client). Em `editavel`, os textos viram
+ * campos editáveis e cada alteração chama `onChange` com o objeto atualizado.
  */
-export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
+export default function EmpreendimentoView({
+  e,
+  editavel = false,
+  onChange,
+}: {
+  e: Empreendimento;
+  editavel?: boolean;
+  onChange?: (e: Empreendimento) => void;
+}) {
+  /** aplica um patch raso e emite o objeto atualizado */
+  const ed = (patch: Partial<Empreendimento>) => onChange?.({ ...e, ...patch });
+  /** atualiza um item de um array de strings (descrição, pontos) */
+  const edArr = (campo: "descricao", i: number, val: string) =>
+    ed({ [campo]: e[campo].map((x, j) => (j === i ? val : x)) } as Partial<Empreendimento>);
+
   const totalImagens = getTodasImagens(e).length;
   const mapaQuery = encodeURIComponent(e.mapaQuery);
   const mensagemWpp = `Olá! Tenho interesse no ${e.nome}. Pode me passar mais informações?`;
@@ -60,16 +105,18 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
               {STATUS_LABEL[e.status]}
             </span>
             <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-              {e.categoria}
+              <Campo editavel={editavel} value={e.categoria} onCommit={(v) => ed({ categoria: v })} />
             </span>
           </div>
           <h1 className="mt-4 font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
-            {e.nome}
+            <Campo editavel={editavel} value={e.nome} onCommit={(v) => ed({ nome: v })} />
           </h1>
-          <p className="mt-3 max-w-xl text-lg text-white/85">{e.subtitulo}</p>
+          <p className="mt-3 max-w-xl text-lg text-white/85">
+            <Campo editavel={editavel} value={e.subtitulo} onCommit={(v) => ed({ subtitulo: v })} />
+          </p>
           <p className="mt-2 flex items-center gap-1.5 text-sm text-white/75">
             <MapPin className="h-4 w-4" aria-hidden="true" />
-            {e.endereco}
+            <Campo editavel={editavel} value={e.endereco} onCommit={(v) => ed({ endereco: v })} />
           </p>
         </div>
       </section>
@@ -78,12 +125,26 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
       {e.numeros.length > 0 && (
         <section className="border-b border-ink/10 bg-surface">
           <div className="container-x grid grid-cols-2 gap-6 py-10 sm:grid-cols-4">
-            {e.numeros.map((n) => (
-              <div key={n.label} className="text-center sm:text-left">
+            {e.numeros.map((n, i) => (
+              <div key={i} className="text-center sm:text-left">
                 <p className="font-serif text-3xl font-semibold text-brand sm:text-4xl">
-                  {n.valor}
+                  <Campo
+                    editavel={editavel}
+                    value={n.valor}
+                    onCommit={(v) =>
+                      ed({ numeros: e.numeros.map((x, j) => (j === i ? { ...x, valor: v } : x)) })
+                    }
+                  />
                 </p>
-                <p className="mt-1 text-sm text-ink-muted">{n.label}</p>
+                <p className="mt-1 text-sm text-ink-muted">
+                  <Campo
+                    editavel={editavel}
+                    value={n.label}
+                    onCommit={(v) =>
+                      ed({ numeros: e.numeros.map((x, j) => (j === i ? { ...x, label: v } : x)) })
+                    }
+                  />
+                </p>
               </div>
             ))}
           </div>
@@ -95,11 +156,17 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
         <div>
           <p className="eyebrow">O empreendimento</p>
           <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-            {e.tagline}
+            <Campo editavel={editavel} value={e.tagline} onCommit={(v) => ed({ tagline: v })} />
           </h2>
           <div className="mt-6 space-y-4 leading-relaxed text-ink-soft">
             {e.descricao.map((p, i) => (
-              <p key={i}>{p}</p>
+              <p key={i}>
+                <Campo
+                  editavel={editavel}
+                  value={p}
+                  onCommit={(v) => edArr("descricao", i, v)}
+                />
+              </p>
             ))}
           </div>
 
@@ -110,21 +177,33 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
                 Estrutura & diferenciais
               </h3>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {e.diferenciais.map((d) => {
+                {e.diferenciais.map((d, i) => {
                   const Icon = iconeDiferencial(d.icon);
                   return (
                     <div
-                      key={d.titulo}
+                      key={i}
                       className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card"
                     >
                       <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-600/10 text-brand">
                         <Icon className="h-5 w-5" aria-hidden="true" />
                       </span>
                       <h4 className="mt-4 font-serif text-lg text-ink">
-                        {d.titulo}
+                        <Campo
+                          editavel={editavel}
+                          value={d.titulo}
+                          onCommit={(v) =>
+                            ed({ diferenciais: e.diferenciais.map((x, j) => (j === i ? { ...x, titulo: v } : x)) })
+                          }
+                        />
                       </h4>
                       <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                        {d.desc}
+                        <Campo
+                          editavel={editavel}
+                          value={d.desc}
+                          onCommit={(v) =>
+                            ed({ diferenciais: e.diferenciais.map((x, j) => (j === i ? { ...x, desc: v } : x)) })
+                          }
+                        />
                       </p>
                     </div>
                   );
@@ -260,8 +339,8 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
               Veja o {e.nome} em movimento
             </h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {e.videos.map((v) => (
-                <figure key={v.src}>
+              {e.videos.map((v, i) => (
+                <figure key={i}>
                   <div className="relative overflow-hidden rounded-2xl bg-ink shadow-card">
                     <video
                       controls
@@ -275,7 +354,13 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
                   </div>
                   <figcaption className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-soft">
                     <Play className="h-4 w-4 text-brand" aria-hidden="true" />
-                    {v.titulo}
+                    <Campo
+                      editavel={editavel}
+                      value={v.titulo}
+                      onCommit={(val) =>
+                        ed({ videos: e.videos.map((x, j) => (j === i ? { ...x, titulo: val } : x)) })
+                      }
+                    />
                   </figcaption>
                 </figure>
               ))}
@@ -290,21 +375,37 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
           <div>
             <p className="eyebrow">Localização</p>
             <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-              No coração de {e.cidade}
+              No coração de{" "}
+              <Campo editavel={editavel} value={e.cidade} onCommit={(v) => ed({ cidade: v })} />
             </h2>
             <p className="mt-4 leading-relaxed text-ink-soft">
-              {e.localizacao.descricao}
+              <Campo
+                editavel={editavel}
+                value={e.localizacao.descricao}
+                onCommit={(v) => ed({ localizacao: { ...e.localizacao, descricao: v } })}
+              />
             </p>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {e.localizacao.pontos.map((p) => (
+              {e.localizacao.pontos.map((p, i) => (
                 <li
-                  key={p}
+                  key={i}
                   className="flex items-center gap-2.5 text-sm text-ink-soft"
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-600/10 text-brand">
                     <Check className="h-4 w-4" />
                   </span>
-                  {p}
+                  <Campo
+                    editavel={editavel}
+                    value={p}
+                    onCommit={(v) =>
+                      ed({
+                        localizacao: {
+                          ...e.localizacao,
+                          pontos: e.localizacao.pontos.map((x, j) => (j === i ? v : x)),
+                        },
+                      })
+                    }
+                  />
                 </li>
               ))}
             </ul>
@@ -332,14 +433,28 @@ export default function EmpreendimentoView({ e }: { e: Empreendimento }) {
                 Resumo do empreendimento
               </h2>
               <dl className="mt-6 divide-y divide-ink/10 rounded-2xl border border-ink/10 bg-surface">
-                {e.ficha.map((f) => (
+                {e.ficha.map((f, i) => (
                   <div
-                    key={f.label}
+                    key={i}
                     className="flex items-center justify-between gap-4 px-5 py-4"
                   >
-                    <dt className="text-sm text-ink-muted">{f.label}</dt>
+                    <dt className="text-sm text-ink-muted">
+                      <Campo
+                        editavel={editavel}
+                        value={f.label}
+                        onCommit={(v) =>
+                          ed({ ficha: e.ficha.map((x, j) => (j === i ? { ...x, label: v } : x)) })
+                        }
+                      />
+                    </dt>
                     <dd className="text-right text-sm font-medium text-ink">
-                      {f.valor}
+                      <Campo
+                        editavel={editavel}
+                        value={f.valor}
+                        onCommit={(v) =>
+                          ed({ ficha: e.ficha.map((x, j) => (j === i ? { ...x, valor: v } : x)) })
+                        }
+                      />
                     </dd>
                   </div>
                 ))}
