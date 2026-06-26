@@ -142,7 +142,7 @@ export const empreendimentos: Empreendimento[] = [
     bairro: "Maria Goretti",
     endereco: "Rua Assis Brasil, 140 — Maria Goretti, Chapecó/SC",
     mapaQuery: "Rua Assis Brasil, 140, Maria Goretti, Chapecó - SC",
-    capa: `${CAPA}/04-fachada-sunset.jpg`,
+    capa: `${CAPA}/06-voo-do-passaro-detalhe.jpg`,
     cartao: `${IMG}/01-fachada-frontal.jpg`,
     resumo:
       "Salas comerciais flexíveis e integráveis, de 20 a 64 m², em uma das regiões mais nobres de Chapecó. Negócios, lazer e estilo de vida reunidos em um só endereço.",
