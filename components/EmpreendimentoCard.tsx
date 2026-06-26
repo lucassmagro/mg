@@ -18,7 +18,7 @@ export default function EmpreendimentoCard({
 }) {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
-      <div className="relative block aspect-[4/3] overflow-hidden">
+      <div className="relative block aspect-[4/3] transform-gpu overflow-hidden rounded-t-2xl">
         <Image
           src={e.cartao}
           alt={`Imagem do empreendimento ${e.nome}`}
