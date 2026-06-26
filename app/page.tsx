@@ -166,7 +166,7 @@ export default async function HomePage() {
               className="group relative block aspect-[3/4] overflow-hidden rounded-3xl"
             >
               <Image
-                src={destaque.capa || destaque.cartao}
+                src="/projetos/valley-business/imgs/04-fachada-sunset.jpg"
                 alt={`Fachada do ${destaque.nome} ao entardecer`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
