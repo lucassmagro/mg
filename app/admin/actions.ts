@@ -1,0 +1,120 @@
+"use server";
+
+/**
+ * Server Actions do painel — salvar, excluir e alternar destaque.
+ * Usam o cliente Supabase do servidor (sessão via cookies); o RLS garante que
+ * só usuários autenticados conseguem escrever.
+ */
+import { revalidatePath } from "next/cache";
+import { criarClienteServer } from "@/lib/supabase/server";
+import type { Empreendimento } from "@/data/empreendimentos";
+
+export interface ResultadoAcao {
+  ok: boolean;
+  erro?: string;
+}
+
+/** Converte o objeto do formulário na linha do banco (snake_case). */
+function empreendimentoParaLinha(e: Empreendimento) {
+  return {
+    id: e.id,
+    nome: e.nome,
+    subtitulo: e.subtitulo,
+    tagline: e.tagline,
+    status: e.status,
+    categoria: e.categoria,
+    tipo_imovel: e.tipoImovel,
+    cidade: e.cidade,
+    bairro: e.bairro,
+    endereco: e.endereco,
+    mapa_query: e.mapaQuery,
+    resumo: e.resumo,
+    capa: e.capa,
+    cartao: e.cartao,
+    preco_venda: e.precoVenda ?? null,
+    preco_aluguel: e.precoAluguel ?? null,
+    destaque: e.destaque,
+    operacoes: e.operacoes,
+    descricao: e.descricao,
+    numeros: e.numeros,
+    diferenciais: e.diferenciais,
+    galeria: e.galeria,
+    tipologias: e.tipologias,
+    plantas_comuns: e.plantasComuns,
+    videos: e.videos,
+    ficha: e.ficha,
+    localizacao: e.localizacao,
+  };
+}
+
+function revalidarTudo(id: string) {
+  revalidatePath("/");
+  revalidatePath("/empreendimentos");
+  revalidatePath(`/empreendimentos/${id}`);
+  revalidatePath("/admin");
+}
+
+export async function salvarEmpreendimento(
+  e: Empreendimento,
+): Promise<ResultadoAcao> {
+  if (!e.id?.trim()) return { ok: false, erro: "O identificador (slug) é obrigatório." };
+  if (!e.nome?.trim()) return { ok: false, erro: "O nome é obrigatório." };
+
+  const supabase = criarClienteServer();
+  const { error } = await supabase
+    .from("empreendimentos")
+    .upsert(empreendimentoParaLinha(e), { onConflict: "id" });
+
+  if (error) return { ok: false, erro: error.message };
+
+  revalidarTudo(e.id);
+  return { ok: true };
+}
+
+export async function excluirEmpreendimento(id: string): Promise<ResultadoAcao> {
+  const supabase = criarClienteServer();
+
+  // Best-effort: remove os arquivos do empreendimento no Storage.
+  const { data: arquivos } = await supabase.storage
+    .from("empreendimentos")
+    .list(id, { limit: 1000 });
+  if (arquivos?.length) {
+    // Lista recursivamente as subpastas conhecidas e remove tudo sob {id}/.
+    const subpastas = ["capa", "cartao", "galeria", "tipologias", "plantas", "videos"];
+    const caminhos: string[] = [];
+    for (const sub of subpastas) {
+      const { data } = await supabase.storage
+        .from("empreendimentos")
+        .list(`${id}/${sub}`, { limit: 1000 });
+      data?.forEach((f) => caminhos.push(`${id}/${sub}/${f.name}`));
+    }
+    arquivos.forEach((f) => {
+      if (f.id) caminhos.push(`${id}/${f.name}`);
+    });
+    if (caminhos.length) {
+      await supabase.storage.from("empreendimentos").remove(caminhos);
+    }
+  }
+
+  const { error } = await supabase.from("empreendimentos").delete().eq("id", id);
+  if (error) return { ok: false, erro: error.message };
+
+  revalidarTudo(id);
+  return { ok: true };
+}
+
+export async function alternarDestaque(
+  id: string,
+  destaque: boolean,
+): Promise<ResultadoAcao> {
+  const supabase = criarClienteServer();
+  const { error } = await supabase
+    .from("empreendimentos")
+    .update({ destaque })
+    .eq("id", id);
+
+  if (error) return { ok: false, erro: error.message };
+
+  revalidarTudo(id);
+  return { ok: true };
+}

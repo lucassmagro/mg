@@ -12,8 +12,9 @@ import {
 import {
   getDestaques,
   getCategorias,
-  empreendimentos,
-} from "@/data/empreendimentos";
+  listarEmpreendimentos,
+} from "@/lib/empreendimentos";
+import { getTodasImagens } from "@/data/empreendimentos";
 import CarrosselRenders from "@/components/CarrosselRenders";
 import HeroBusca from "@/components/HeroBusca";
 import { iconeDiferencial } from "@/lib/diferencialIcons";
@@ -42,17 +43,38 @@ const valores = [
   },
 ];
 
-export default function HomePage() {
-  const destaque = getDestaques()[0];
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [destaques, lista, categorias] = await Promise.all([
+    getDestaques(),
+    listarEmpreendimentos(),
+    getCategorias(),
+  ]);
+  const destaque = destaques[0] ?? lista[0];
+
+  // Sem nenhum empreendimento cadastrado ainda — evita quebra na primeira carga.
+  if (!destaque) {
+    return (
+      <section className="container-x flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
+        <h1 className="font-serif text-3xl font-semibold text-ink sm:text-4xl">
+          Em breve, novos empreendimentos
+        </h1>
+        <p className="mt-4 max-w-md text-ink-soft">
+          Estamos preparando o conteúdo. Volte em instantes para conhecer os
+          projetos da {marca.nome}.
+        </p>
+      </section>
+    );
+  }
+
+  // Renders do carrossel: usa as imagens da galeria (com fallback seguro).
+  const rendersCarrossel = getTodasImagens(destaque).slice(0, 9);
 
   return (
     <>
       {/* HERO + BUSCA DE IMÓVEIS */}
-      <HeroBusca
-        destaque={destaque}
-        lista={empreendimentos}
-        categorias={getCategorias()}
-      />
+      <HeroBusca destaque={destaque} lista={lista} categorias={categorias} />
 
       {/* QUEM SOMOS */}
       <section className="container-x py-20">
@@ -144,7 +166,7 @@ export default function HomePage() {
               className="group relative block aspect-[3/4] overflow-hidden rounded-3xl"
             >
               <Image
-                src="/projetos/valley-business/imgs/04-fachada-sunset.jpg"
+                src={destaque.capa || destaque.cartao}
                 alt={`Fachada do ${destaque.nome} ao entardecer`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -189,39 +211,29 @@ export default function HomePage() {
       </section>
 
       {/* CARROSSEL DE RENDERS */}
-      <section className="container-x py-20">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Um tour pelo {destaque.nome}</p>
-            <h2 className="mt-2 max-w-2xl font-serif text-3xl font-semibold text-ink sm:text-4xl">
-              Estrutura corporativa do térreo ao rooftop
-            </h2>
+      {rendersCarrossel.length > 0 && (
+        <section className="container-x py-20">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Um tour pelo {destaque.nome}</p>
+              <h2 className="mt-2 max-w-2xl font-serif text-3xl font-semibold text-ink sm:text-4xl">
+                Estrutura corporativa do térreo ao rooftop
+              </h2>
+            </div>
+            <Link
+              href={`/empreendimentos/${destaque.id}`}
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-brand"
+            >
+              Ver galeria completa
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            href={`/empreendimentos/${destaque.id}`}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-brand"
-          >
-            Ver galeria completa
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
 
-        <div className="mt-10">
-          <CarrosselRenders
-            imagens={[
-              destaque.galeria[0].imagens[1],
-              destaque.galeria[1].imagens[0],
-              destaque.galeria[4].imagens[1],
-              destaque.galeria[2].imagens[0],
-              destaque.galeria[3].imagens[0],
-              destaque.galeria[1].imagens[2],
-              destaque.galeria[4].imagens[3],
-              destaque.galeria[4].imagens[5],
-              destaque.galeria[0].imagens[3],
-            ]}
-          />
-        </div>
-      </section>
+          <div className="mt-10">
+            <CarrosselRenders imagens={rendersCarrossel} />
+          </div>
+        </section>
+      )}
 
       {/* CTA BAND */}
       <section className="container-x pb-24">

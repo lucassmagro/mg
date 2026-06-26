@@ -10,12 +10,8 @@ import {
   Check,
   Play,
 } from "lucide-react";
-import {
-  getEmpreendimento,
-  getTodasImagens,
-  empreendimentos,
-  STATUS_LABEL,
-} from "@/data/empreendimentos";
+import { getEmpreendimento } from "@/lib/empreendimentos";
+import { getTodasImagens, STATUS_LABEL } from "@/data/empreendimentos";
 import { iconeDiferencial } from "@/lib/diferencialIcons";
 import { marca, whatsappLink } from "@/lib/config";
 import GaleriaCategorizada from "@/components/GaleriaCategorizada";
@@ -23,16 +19,15 @@ import HeroCarrossel from "@/components/HeroCarrossel";
 import Tipologias from "@/components/Tipologias";
 import VisitForm from "@/components/VisitForm";
 
-export function generateStaticParams() {
-  return empreendimentos.map((e) => ({ id: e.id }));
-}
+// Conteúdo vem do Supabase; renderiza dinamicamente para refletir edições na hora.
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { id: string };
-}): Metadata {
-  const e = getEmpreendimento(params.id);
+}): Promise<Metadata> {
+  const e = await getEmpreendimento(params.id);
   if (!e) return { title: "Empreendimento não encontrado" };
   return {
     title: `${e.nome} — ${e.subtitulo}`,
@@ -40,23 +35,29 @@ export function generateMetadata({
   };
 }
 
-export default function EmpreendimentoPage({
+export default async function EmpreendimentoPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const e = getEmpreendimento(params.id);
+  const e = await getEmpreendimento(params.id);
   if (!e) notFound();
 
   const totalImagens = getTodasImagens(e).length;
   const mapaQuery = encodeURIComponent(e.mapaQuery);
   const mensagemWpp = `Olá! Tenho interesse no ${e.nome}. Pode me passar mais informações?`;
+  // Imagens do banner: 1ª categoria da galeria; se vazia, cai para a capa.
+  const heroImagens = e.galeria[0]?.imagens?.length
+    ? e.galeria[0].imagens
+    : e.capa
+      ? [{ src: e.capa, alt: e.nome }]
+      : [];
 
   return (
     <div className="bg-sand-50">
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
-        <HeroCarrossel imagens={e.galeria[0].imagens} />
+        <HeroCarrossel imagens={heroImagens} />
 
         <div className="container-x flex min-h-[80vh] flex-col justify-end py-14 lg:min-h-[88vh]">
           <nav
@@ -94,18 +95,20 @@ export default function EmpreendimentoPage({
       </section>
 
       {/* NÚMEROS */}
-      <section className="border-b border-ink/10 bg-surface">
-        <div className="container-x grid grid-cols-2 gap-6 py-10 sm:grid-cols-4">
-          {e.numeros.map((n) => (
-            <div key={n.label} className="text-center sm:text-left">
-              <p className="font-serif text-3xl font-semibold text-brand sm:text-4xl">
-                {n.valor}
-              </p>
-              <p className="mt-1 text-sm text-ink-muted">{n.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {e.numeros.length > 0 && (
+        <section className="border-b border-ink/10 bg-surface">
+          <div className="container-x grid grid-cols-2 gap-6 py-10 sm:grid-cols-4">
+            {e.numeros.map((n) => (
+              <div key={n.label} className="text-center sm:text-left">
+                <p className="font-serif text-3xl font-semibold text-brand sm:text-4xl">
+                  {n.valor}
+                </p>
+                <p className="mt-1 text-sm text-ink-muted">{n.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* SOBRE + CARD STICKY */}
       <div className="container-x grid gap-10 py-16 lg:grid-cols-[1fr_360px]">
@@ -121,13 +124,15 @@ export default function EmpreendimentoPage({
           </div>
 
           {/* Diferenciais */}
-          <h3 className="mt-12 font-serif text-2xl text-ink">
-            Estrutura & diferenciais
-          </h3>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {e.diferenciais.map((d) => {
-              const Icon = iconeDiferencial(d.icon);
-              return (
+          {e.diferenciais.length > 0 && (
+            <>
+              <h3 className="mt-12 font-serif text-2xl text-ink">
+                Estrutura & diferenciais
+              </h3>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {e.diferenciais.map((d) => {
+                  const Icon = iconeDiferencial(d.icon);
+                  return (
                 <div
                   key={d.titulo}
                   className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card"
@@ -141,10 +146,12 @@ export default function EmpreendimentoPage({
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                     {d.desc}
                   </p>
-                </div>
-              );
-            })}
-          </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Card de contato */}
@@ -188,77 +195,92 @@ export default function EmpreendimentoPage({
       </div>
 
       {/* GALERIA */}
-      <section className="border-t border-ink/10 bg-surface py-16">
-        <div className="container-x">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="eyebrow">Galeria</p>
-              <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-                Imagens do projeto
-              </h2>
-            </div>
-            <p className="text-sm text-ink-muted">
-              {totalImagens} imagens · clique para ampliar
-            </p>
-          </div>
-          <div className="mt-8">
-            <GaleriaCategorizada galeria={e.galeria} />
-          </div>
-        </div>
-      </section>
-
-      {/* TIPOLOGIAS */}
-      <section className="container-x py-16">
-        <p className="eyebrow">Plantas</p>
-        <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-          Tipologias das salas
-        </h2>
-        <p className="mt-3 max-w-2xl text-ink-soft">
-          Salas que se adaptam ao tamanho do seu negócio. Escolha uma tipologia
-          e veja a opção individual ou unificada.
-        </p>
-        <div className="mt-8">
-          <Tipologias tipologias={e.tipologias} />
-        </div>
-
-        {/* Plantas de áreas comuns */}
-        <h3 className="mt-14 font-serif text-2xl text-ink">
-          Pavimentos & áreas comuns
-        </h3>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {e.plantasComuns.map((p) => (
-            <a
-              key={p.titulo}
-              href={p.src}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group rounded-2xl border border-ink/10 bg-surface p-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-card-hover"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-sand-100">
-                <Image
-                  src={p.src}
-                  alt={`Planta — ${p.titulo}`}
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 33vw"
-                  className="object-contain p-2"
-                />
+      {totalImagens > 0 && (
+        <section className="border-t border-ink/10 bg-surface py-16">
+          <div className="container-x">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="eyebrow">Galeria</p>
+                <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
+                  Imagens do projeto
+                </h2>
               </div>
-              <h4 className="mt-4 font-serif text-lg text-ink">{p.titulo}</h4>
-              <p className="mt-1 text-sm text-ink-soft">{p.descricao}</p>
-            </a>
-          ))}
-        </div>
-      </section>
+              <p className="text-sm text-ink-muted">
+                {totalImagens} imagens · clique para ampliar
+              </p>
+            </div>
+            <div className="mt-8">
+              <GaleriaCategorizada galeria={e.galeria} />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* TIPOLOGIAS + PLANTAS */}
+      {(e.tipologias.length > 0 || e.plantasComuns.length > 0) && (
+        <section className="container-x py-16">
+          {e.tipologias.length > 0 && (
+            <>
+              <p className="eyebrow">Plantas</p>
+              <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
+                Tipologias das salas
+              </h2>
+              <p className="mt-3 max-w-2xl text-ink-soft">
+                Salas que se adaptam ao tamanho do seu negócio. Escolha uma
+                tipologia e veja a opção individual ou unificada.
+              </p>
+              <div className="mt-8">
+                <Tipologias tipologias={e.tipologias} />
+              </div>
+            </>
+          )}
+
+          {/* Plantas de áreas comuns */}
+          {e.plantasComuns.length > 0 && (
+            <>
+              <h3 className="mt-14 font-serif text-2xl text-ink">
+                Pavimentos & áreas comuns
+              </h3>
+              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {e.plantasComuns.map((p) => (
+                  <a
+                    key={p.titulo}
+                    href={p.src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group rounded-2xl border border-ink/10 bg-surface p-4 shadow-card transition-all hover:-translate-y-1 hover:shadow-card-hover"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-sand-100">
+                      <Image
+                        src={p.src}
+                        alt={`Planta — ${p.titulo}`}
+                        fill
+                        sizes="(max-width: 1024px) 50vw, 33vw"
+                        className="object-contain p-2"
+                      />
+                    </div>
+                    <h4 className="mt-4 font-serif text-lg text-ink">
+                      {p.titulo}
+                    </h4>
+                    <p className="mt-1 text-sm text-ink-soft">{p.descricao}</p>
+                  </a>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+      )}
 
       {/* VÍDEOS */}
-      <section className="border-t border-ink/10 bg-surface py-16">
-        <div className="container-x">
-          <p className="eyebrow">Vídeos</p>
-          <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-            Veja o {e.nome} em movimento
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {e.videos.map((v) => (
+      {e.videos.length > 0 && (
+        <section className="border-t border-ink/10 bg-surface py-16">
+          <div className="container-x">
+            <p className="eyebrow">Vídeos</p>
+            <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
+              Veja o {e.nome} em movimento
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {e.videos.map((v) => (
               <figure key={v.src}>
                 <div className="relative overflow-hidden rounded-2xl bg-ink shadow-card">
                   <video
@@ -277,9 +299,10 @@ export default function EmpreendimentoPage({
                 </figcaption>
               </figure>
             ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* LOCALIZAÇÃO + FICHA */}
       <section className="container-x py-16">

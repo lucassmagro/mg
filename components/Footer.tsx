@@ -5,6 +5,7 @@ import {
   Phone,
   Mail,
   MessageCircle,
+  Lock,
 } from "lucide-react";
 import Logo from "./Logo";
 import { marca, navLinks, whatsappLink } from "@/lib/config";
@@ -124,10 +125,19 @@ export default function Footer() {
           <p>
             © {ano} {marca.nome}. Todos os direitos reservados.
           </p>
-          <p>
-            CNPJ {marca.cnpj} · Imagens meramente ilustrativas. Projeto sujeito
-            a alterações.
-          </p>
+          <div className="flex items-center gap-4">
+            <p>
+              CNPJ {marca.cnpj} · Imagens meramente ilustrativas. Projeto
+              sujeito a alterações.
+            </p>
+            <Link
+              href="/admin"
+              className="inline-flex shrink-0 items-center gap-1.5 text-white/50 transition-colors hover:text-white"
+            >
+              <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+              Painel
+            </Link>
+          </div>
         </div>
       </div>
 

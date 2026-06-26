@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Clock } from "lucide-react";
-import { empreendimentos } from "@/data/empreendimentos";
+import { listarEmpreendimentos } from "@/lib/empreendimentos";
 import EmpreendimentoCard from "@/components/EmpreendimentoCard";
 import { marca } from "@/lib/config";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Empreendimentos",
@@ -10,7 +12,8 @@ export const metadata: Metadata = {
     "Conheça os empreendimentos da MG Incorporações, com destaque para o Valley Business — torre corporativa de salas comerciais em Chapecó.",
 };
 
-export default function EmpreendimentosPage() {
+export default async function EmpreendimentosPage() {
+  const empreendimentos = await listarEmpreendimentos();
   return (
     <div className="bg-sand-50">
       <section className="border-b border-ink/10 bg-surface">

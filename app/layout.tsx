@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import SiteChrome from "@/components/SiteChrome";
 import { marca } from "@/lib/config";
 
 const fraunces = Fraunces({
@@ -36,10 +34,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );

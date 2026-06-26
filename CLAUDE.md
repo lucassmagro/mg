@@ -8,13 +8,17 @@
 
 Site institucional de alta fidelidade da **MG Incorporações** (incorporadora),
 com destaque para o empreendimento real **Valley Business** (torre corporativa
-de salas comerciais). É um **protótipo navegável**: sem backend, sem login, sem
-banco — o conteúdo vem de um arquivo de dados local. Tudo em **pt-BR**.
+de salas comerciais). Tem **backend Supabase** (banco + storage + auth) e um
+**painel admin** (`/admin`) onde o cliente cadastra empreendimentos sozinho. As
+páginas públicas leem do Supabase (render dinâmico). Tudo em **pt-BR**.
 
 ## Stack
 
 - **Next.js 14 (App Router) + React 18 + TypeScript**
 - **Tailwind CSS** (config em [`tailwind.config.ts`](tailwind.config.ts))
+- **Supabase** — Postgres (dados), Storage (imagens/vídeos), Auth (login do
+  admin). Clientes em [`lib/supabase/`](lib/supabase); leitura em
+  [`lib/empreendimentos.ts`](lib/empreendimentos.ts).
 - Ícones **lucide-react**
 - Fontes: **Fraunces** (serifada, títulos) + **Inter** (sans, texto), em [`app/layout.tsx`](app/layout.tsx)
 - `sharp` (devDep) — só para o pipeline de imagens; não é usado em runtime de app
@@ -25,11 +29,17 @@ banco — o conteúdo vem de um arquivo de dados local. Tudo em **pt-BR**.
 npm run dev      # desenvolvimento (localhost:3000)
 npm run build    # build de produção
 npm start        # serve a build
+npm run seed     # migra/insere o Valley Business no Supabase (usa .env.local)
 
 # pipeline de assets (rodar só quando trocar imagens/logos de origem)
 node scripts/optimize-assets.mjs   # otimiza renders/plantas/capa -> public/
 node scripts/logos2.mjs            # gera SVGs do logo recortados + favicons
 ```
+
+> **Configuração Supabase:** copie `.env.example` para `.env.local` e preencha
+> as chaves (Project Settings > API). Rode `supabase/schema.sql` no SQL Editor
+> do Supabase (cria tabela, RLS e bucket). Crie o usuário admin em
+> Authentication > Users. Acesse o painel em `/admin`.
 
 > Ao remover/renomear rotas, apague `.next/` antes de `build` (os tipos gerados
 > ficam em cache e quebram o `tsc`).
@@ -57,13 +67,21 @@ components/
   VisitForm.tsx              # form de interesse (visual; client)
   ContactForm.tsx            # form de contato (visual; client)
   FloatingWhatsApp.tsx       # botão flutuante
+  SiteChrome.tsx             # mostra Header/Footer no site; oculta em /admin (client)
+  admin/                     # painel: AdminTopbar, ListaAdmin, EmpreendimentoForm, CampoUpload
+app/admin/                   # painel protegido (login, lista, form novo/[id], actions.ts)
+middleware.ts                # protege /admin (sessão Supabase); refresh de sessão
 data/
-  empreendimentos.ts         # FONTE DE DADOS + tipos + helpers (getEmpreendimento, getDestaques...)
+  empreendimentos.ts         # TIPOS + constantes (STATUS_LABEL...) + seed (Valley) + getTodasImagens
 lib/
+  empreendimentos.ts         # LEITURA do Supabase (async): get/list/destaques/categorias + mapeamento
+  supabase/client.ts         # cliente browser (anon) — @supabase/ssr
+  supabase/server.ts         # cliente server (cookies) — @supabase/ssr
   config.ts                  # `marca` (branding/contato) + navLinks + whatsappLink()
   format.ts                  # formatBRL / formatArea
-  diferencialIcons.tsx       # mapa chave->ícone lucide para diferenciais
-scripts/                     # pipeline de imagens/logos (sharp)
+  diferencialIcons.tsx       # mapa chave->ícone lucide para diferenciais (lista fixa de chaves)
+supabase/schema.sql          # tabela empreendimentos + RLS + bucket/policies de Storage
+scripts/                     # pipeline de imagens/logos (sharp) + seed-supabase.ts
 assets/                      # ARQUIVOS-FONTE (renders, plantas, vídeos, logos) — NÃO servidos
 public/projetos/valley-business/  # mídia otimizada servida (imgs, plantas, capa, videos)
 public/logo/                 # SVGs do logo + favicons
@@ -71,16 +89,32 @@ public/logo/                 # SVGs do logo + favicons
 
 ## Dados (modelo)
 
-Tudo em [`data/empreendimentos.ts`](data/empreendimentos.ts). Tipo principal
-`Empreendimento` com: `id`, `nome`, `subtitulo`, `tagline`, `status`
-(`lancamento|em-obras|pronto|breve`), `categoria`, `cidade`, `bairro`,
-`endereco`, `mapaQuery`, `capa`, `cartao`, `resumo`, `descricao[]`, `numeros[]`,
-`diferenciais[]` (com chave de `icon`), `galeria[]` (categorias com imagens+alt),
-`tipologias[]` (com `planta` e `plantaUnificada`), `plantasComuns[]`, `videos[]`,
-`ficha[]`, `localizacao`, `destaque`. Helpers: `getEmpreendimento(id)`,
-`getDestaques()`, `getTodasImagens(e)`, `STATUS_LABEL`.
+Os **tipos** (`Empreendimento` e afins) e as constantes (`STATUS_LABEL`,
+`OPERACAO_LABEL`, `TIPO_IMOVEL_LABEL`) ficam em
+[`data/empreendimentos.ts`](data/empreendimentos.ts), junto com o array do Valley
+(usado como **seed**, via `npm run seed`) e `getTodasImagens(e)` (função pura).
 
-As páginas leem **só** desse arquivo. Os componentes recebem os dados por props.
+A **fonte de dados em runtime é o Supabase**: as páginas chamam as funções async
+de [`lib/empreendimentos.ts`](lib/empreendimentos.ts) (`getEmpreendimento`,
+`listarEmpreendimentos`, `getDestaques`, `getCategorias`), que leem a tabela
+`empreendimentos` e mapeiam a linha (colunas + JSONB) para o tipo `Empreendimento`.
+
+Modelo da tabela: campos escalares/filtráveis são colunas (`id`/slug, `nome`,
+`status`, `tipo_imovel`, `preco_venda`...); as estruturas aninhadas
+(`descricao`, `numeros`, `diferenciais`, `galeria`, `tipologias`,
+`plantas_comuns`, `videos`, `ficha`, `localizacao`, `operacoes`) são **JSONB**.
+Imagens/vídeos guardam a **URL pública** do Storage (o Valley mantém caminhos
+`/public/...`). Os componentes recebem `src` como string — não mudam.
+
+## Painel admin (`/admin`)
+
+- Login e-mail/senha (Supabase Auth); `middleware.ts` protege as rotas.
+- [`EmpreendimentoForm`](components/admin/EmpreendimentoForm.tsx) edita **todos**
+  os campos; uploads vão para o Storage via [`CampoUpload`](components/admin/CampoUpload.tsx).
+- Salvar/excluir/destaque em [`app/admin/actions.ts`](app/admin/actions.ts)
+  (server actions; RLS exige sessão autenticada).
+- **Vídeos:** upload de MP4 no Storage (decisão do cliente). ⚠️ Plano grátis
+  ~1 GB — orientar vídeos curtos/leves; rever se crescer.
 
 ## Branding / design system
 
@@ -117,16 +151,14 @@ As páginas leem **só** desse arquivo. Os componentes recebem os dados por prop
 
 - Renders originais (~10–17 MB) em `assets/` → otimizados (~200–650 KB) para
   `public/` via `scripts/optimize-assets.mjs` (sharp). Plantas e capa idem.
-- **Vídeos:** decisão do projeto — o cliente sobe no **YouTube** e o site apenas
-  **incorpora/indexa o link** (embed). Não hospedar MP4 pesado no `public/` em
-  produção. (Hoje, no protótipo, ainda há MP4 em `public/.../videos` — substituir
-  por embed do YouTube na evolução.)
+- **Vídeos:** o **Valley** mantém MP4 em `public/.../videos`. **Novos**
+  empreendimentos cadastrados no painel sobem o MP4 para o **Supabase Storage**
+  (decisão do cliente, substitui a ideia anterior de YouTube). ⚠️ Plano grátis
+  do Storage ~1 GB — orientar vídeos curtos; rever se crescer.
 
-## Evolução planejada (não implementado ainda)
+## Estado do CMS (implementado)
 
-Permitir que o **cliente cadastre empreendimentos sozinho** via painel, sem o
-desenvolvedor. CMS ainda **em definição: Supabase OU Sanity**. Vídeos serão
-**links do YouTube** (campo de URL + embed). Plano completo e briefing de
-implementação em [`docs/plano-cms-empreendimentos.md`](docs/plano-cms-empreendimentos.md).
-Quando isso for feito, `data/empreendimentos.ts` deixa de ser a fonte de dados
-(vira seed/fallback) e as páginas passam a ler do CMS.
+O cliente já cadastra empreendimentos sozinho em `/admin` (Supabase: banco +
+storage + auth). `data/empreendimentos.ts` virou **seed/fallback**; as páginas
+leem do Supabase via `lib/empreendimentos.ts`. Histórico de decisões e o plano
+original em [`docs/plano-cms-empreendimentos.md`](docs/plano-cms-empreendimentos.md).

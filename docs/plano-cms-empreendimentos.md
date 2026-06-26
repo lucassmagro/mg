@@ -1,5 +1,12 @@
 # Plano — Cliente cadastrando empreendimentos sozinho (CMS)
 
+> **STATUS (implementado):** o CMS foi construído com **Supabase** (banco +
+> storage + auth) e um **painel próprio em `/admin`** — não com Sanity. A
+> comparação Sanity × Supabase abaixo é histórica. **Vídeos:** decisão final =
+> **upload de MP4 no Supabase Storage** (não YouTube). Detalhes de uso/arquitetura
+> no `CLAUDE.md`. Configuração: `.env.example` + `supabase/schema.sql` +
+> `npm run seed`. O restante deste documento é o plano original.
+
 > Objetivo: permitir que o cliente que receber o site cadastre/edite **todos os
 > dados, textos, imagens, plantas e vídeos** dos próximos empreendimentos pelo
 > navegador, **sem depender do desenvolvedor**.

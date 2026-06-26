@@ -95,7 +95,7 @@ export default function HeroBusca({
         <div className="relative isolate overflow-hidden rounded-3xl">
           <div className="absolute inset-0 -z-10">
             <Image
-              src="/projetos/valley-business/capa/06-voo-do-passaro-detalhe.jpg"
+              src={destaque.capa || destaque.cartao}
               alt={`Vista do empreendimento ${destaque.nome}`}
               fill
               priority
