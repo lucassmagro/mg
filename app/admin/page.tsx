@@ -6,7 +6,7 @@ import ListaAdmin from "@/components/admin/ListaAdmin";
 export const dynamic = "force-dynamic";
 
 export default async function AdminHomePage() {
-  const empreendimentos = await listarEmpreendimentos();
+  const empreendimentos = await listarEmpreendimentos({ todos: true });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">

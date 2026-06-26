@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Loader2, GripVertical } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Loader2,
+  GripVertical,
+  Pencil,
+  Eye,
+  Globe,
+  FileText,
+} from "lucide-react";
 import type {
   Empreendimento,
   StatusEmpreendimento,
@@ -12,6 +21,7 @@ import type {
 import { DIFERENCIAL_ICONS } from "@/lib/diferencialIcons";
 import { salvarEmpreendimento } from "@/app/admin/actions";
 import CampoUpload from "@/components/admin/CampoUpload";
+import EmpreendimentoView from "@/components/EmpreendimentoView";
 
 const STATUS: { v: StatusEmpreendimento; l: string }[] = [
   { v: "lancamento", l: "Lançamento" },
@@ -62,6 +72,7 @@ function vazio(): Empreendimento {
     ficha: [],
     localizacao: { descricao: "", pontos: [] },
     destaque: false,
+    publicado: false,
   };
 }
 
@@ -84,8 +95,9 @@ export default function EmpreendimentoForm({
   const router = useRouter();
   const [e, setE] = useState<Empreendimento>(inicial ?? vazio());
   const [slugTocado, setSlugTocado] = useState(isEdit);
-  const [salvando, setSalvando] = useState(false);
+  const [salvando, setSalvando] = useState<null | "rascunho" | "publicar">(null);
   const [erro, setErro] = useState<string | null>(null);
+  const [aba, setAba] = useState<"editar" | "preview">("editar");
 
   function set<K extends keyof Empreendimento>(k: K, v: Empreendimento[K]) {
     setE((prev) => ({ ...prev, [k]: v }));
@@ -108,14 +120,13 @@ export default function EmpreendimentoForm({
     );
   }
 
-  async function enviar(ev: React.FormEvent) {
-    ev.preventDefault();
+  async function salvar(publicar: boolean) {
     setErro(null);
-    setSalvando(true);
-    const r = await salvarEmpreendimento(e);
+    setSalvando(publicar ? "publicar" : "rascunho");
+    const r = await salvarEmpreendimento({ ...e, publicado: publicar });
     if (!r.ok) {
       setErro(r.erro ?? "Erro ao salvar.");
-      setSalvando(false);
+      setSalvando(null);
       return;
     }
     router.push("/admin");
@@ -124,38 +135,119 @@ export default function EmpreendimentoForm({
 
   const slug = e.id || "rascunho";
 
+  const acoes = (
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        onClick={() => router.push("/admin")}
+        className="btn-outline"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        onClick={() => salvar(false)}
+        disabled={!!salvando}
+        className="btn-outline disabled:opacity-60"
+      >
+        {salvando === "rascunho" ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <FileText className="h-4 w-4" />
+        )}
+        Salvar rascunho
+      </button>
+      <button
+        type="button"
+        onClick={() => salvar(true)}
+        disabled={!!salvando}
+        className="btn-primary disabled:opacity-60"
+      >
+        {salvando === "publicar" ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <Globe className="h-4 w-4" />
+        )}
+        Publicar
+      </button>
+    </div>
+  );
+
   return (
-    <form onSubmit={enviar} className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink">
-          {isEdit ? "Editar empreendimento" : "Novo empreendimento"}
-        </h1>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => router.push("/admin")}
-            className="btn-outline"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            disabled={salvando}
-            className="btn-primary disabled:opacity-60"
-          >
-            {salvando && <Loader2 className="h-4 w-4 animate-spin" />}
-            Salvar
-          </button>
+    <div className="pb-10">
+      {/* Barra de ações fixa: título, status, abas e botões */}
+      <div className="sticky top-0 z-20 border-b border-ink/10 bg-sand-50/95 backdrop-blur">
+        <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <h1 className="font-serif text-xl font-semibold text-ink">
+                {isEdit ? "Editar empreendimento" : "Novo empreendimento"}
+              </h1>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                  e.publicado
+                    ? "bg-green-100 text-green-700"
+                    : "bg-amber-100 text-amber-700"
+                }`}
+              >
+                {e.publicado ? "Publicado" : "Rascunho"}
+              </span>
+            </div>
+            {acoes}
+          </div>
+
+          {/* Abas Editar / Pré-visualizar */}
+          <div className="mt-3 flex gap-1">
+            {([
+              { id: "editar", label: "Editar", icon: Pencil },
+              { id: "preview", label: "Pré-visualizar", icon: Eye },
+            ] as const).map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setAba(t.id)}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  aba === t.id
+                    ? "bg-accent-600 text-white"
+                    : "text-ink-soft hover:bg-sand-100"
+                }`}
+              >
+                <t.icon className="h-4 w-4" />
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {erro && (
-        <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {erro}
-        </p>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
+          <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+            {erro}
+          </p>
+        </div>
       )}
 
-      {/* ---- Identificação ---- */}
+      {/* PRÉ-VISUALIZAÇÃO ao vivo: renderiza a página real do site */}
+      {aba === "preview" && (
+        <div className="border-t border-ink/10">
+          {!e.nome ? (
+            <p className="mx-auto max-w-4xl px-4 py-16 text-center text-ink-muted sm:px-6">
+              Preencha ao menos o nome para ver a pré-visualização.
+            </p>
+          ) : (
+            <EmpreendimentoView e={e} />
+          )}
+        </div>
+      )}
+
+      <form
+        onSubmit={(ev) => ev.preventDefault()}
+        className={`mx-auto max-w-4xl px-4 py-8 sm:px-6 ${
+          aba === "preview" ? "hidden" : ""
+        }`}
+      >
+        {/* ---- Identificação ---- */}
       <Secao titulo="Identificação">
         <div className="grid gap-4 sm:grid-cols-2">
           <Texto label="Nome" value={e.nome} onChange={aoMudarNome} required />
@@ -535,20 +627,9 @@ export default function EmpreendimentoForm({
         />
       </Secao>
 
-      <div className="mt-8 flex justify-end gap-2">
-        <button
-          type="button"
-          onClick={() => router.push("/admin")}
-          className="btn-outline"
-        >
-          Cancelar
-        </button>
-        <button type="submit" disabled={salvando} className="btn-primary disabled:opacity-60">
-          {salvando && <Loader2 className="h-4 w-4 animate-spin" />}
-          Salvar
-        </button>
-      </div>
-    </form>
+        <div className="mt-8 flex justify-end">{acoes}</div>
+      </form>
+    </div>
   );
 }
 

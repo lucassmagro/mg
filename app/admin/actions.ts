@@ -34,6 +34,7 @@ function empreendimentoParaLinha(e: Empreendimento) {
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
     destaque: e.destaque,
+    publicado: e.publicado,
     operacoes: e.operacoes,
     descricao: e.descricao,
     numeros: e.numeros,

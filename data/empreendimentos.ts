@@ -115,6 +115,8 @@ export interface Empreendimento {
     pontos: string[];
   };
   destaque: boolean;
+  /** Rascunho (false) não aparece no site público; só na pré-visualização do painel. */
+  publicado: boolean;
 }
 
 const IMG = "/projetos/valley-business/imgs";
@@ -358,6 +360,7 @@ export const empreendimentos: Empreendimento[] = [
       ],
     },
     destaque: true,
+    publicado: true,
   },
 ];
 

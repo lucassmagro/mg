@@ -31,6 +31,7 @@ create table if not exists public.empreendimentos (
   preco_venda   numeric,                             -- "a partir de" (opcional)
   preco_aluguel numeric,                             -- "a partir de" (opcional)
   destaque      boolean not null default false,
+  publicado     boolean not null default false,      -- rascunho (false) não aparece no site
   ordem         integer not null default 0,          -- ordenação na listagem
 
   -- Estruturas aninhadas (espelham as interfaces de data/empreendimentos.ts)
@@ -48,6 +49,10 @@ create table if not exists public.empreendimentos (
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
+
+-- Para bancos criados antes desta coluna existir (idempotente):
+alter table public.empreendimentos
+  add column if not exists publicado boolean not null default false;
 
 create index if not exists empreendimentos_ordem_idx on public.empreendimentos (ordem);
 create index if not exists empreendimentos_destaque_idx on public.empreendimentos (destaque);

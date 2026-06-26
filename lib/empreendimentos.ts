@@ -33,6 +33,7 @@ export interface EmpreendimentoRow {
   preco_venda: number | null;
   preco_aluguel: number | null;
   destaque: boolean;
+  publicado: boolean;
   ordem: number;
   operacoes: unknown;
   descricao: unknown;
@@ -80,19 +81,41 @@ export function linhaParaEmpreendimento(row: EmpreendimentoRow): Empreendimento 
         pontos: [],
       },
     destaque: row.destaque,
+    publicado: row.publicado ?? true,
   };
 }
 
 const SELECT = "*";
 
-/** Todos os empreendimentos, ordenados por `ordem` e data de criação. */
-export async function listarEmpreendimentos(): Promise<Empreendimento[]> {
+/** true se o erro for "coluna publicado não existe" (antes da migração). */
+function colunaPublicadoFaltando(error: { code?: string; message?: string }) {
+  return error?.code === "42703" || /publicado/i.test(error?.message ?? "");
+}
+
+/**
+ * Lista empreendimentos ordenados. Por padrão retorna só os **publicados**;
+ * passe `{ todos: true }` (uso do painel) para incluir rascunhos.
+ */
+export async function listarEmpreendimentos(opts?: {
+  todos?: boolean;
+}): Promise<Empreendimento[]> {
   const supabase = criarClienteServer();
-  const { data, error } = await supabase
-    .from("empreendimentos")
-    .select(SELECT)
-    .order("ordem", { ascending: true })
-    .order("created_at", { ascending: true });
+
+  const consulta = (filtrarPublicado: boolean) => {
+    let q = supabase
+      .from("empreendimentos")
+      .select(SELECT)
+      .order("ordem", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (filtrarPublicado) q = q.eq("publicado", true);
+    return q;
+  };
+
+  let { data, error } = await consulta(!opts?.todos);
+  // Antes da migração (coluna ausente): devolve tudo para não quebrar o site.
+  if (error && !opts?.todos && colunaPublicadoFaltando(error)) {
+    ({ data, error } = await consulta(false));
+  }
 
   if (error) {
     console.error("Erro ao listar empreendimentos:", error.message);
@@ -119,14 +142,24 @@ export async function getEmpreendimento(
   return data ? linhaParaEmpreendimento(data as EmpreendimentoRow) : null;
 }
 
-/** Empreendimentos marcados como destaque. */
+/** Empreendimentos em destaque (apenas publicados). */
 export async function getDestaques(): Promise<Empreendimento[]> {
   const supabase = criarClienteServer();
-  const { data, error } = await supabase
-    .from("empreendimentos")
-    .select(SELECT)
-    .eq("destaque", true)
-    .order("ordem", { ascending: true });
+
+  const consulta = (filtrarPublicado: boolean) => {
+    let q = supabase
+      .from("empreendimentos")
+      .select(SELECT)
+      .eq("destaque", true)
+      .order("ordem", { ascending: true });
+    if (filtrarPublicado) q = q.eq("publicado", true);
+    return q;
+  };
+
+  let { data, error } = await consulta(true);
+  if (error && colunaPublicadoFaltando(error)) {
+    ({ data, error } = await consulta(false));
+  }
 
   if (error) {
     console.error("Erro ao buscar destaques:", error.message);

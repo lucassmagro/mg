@@ -77,7 +77,18 @@ export default function ListaAdmin({
               </div>
 
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-ink">{e.nome}</p>
+                <div className="flex items-center gap-2">
+                  <p className="truncate font-medium text-ink">{e.nome}</p>
+                  <span
+                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                      e.publicado
+                        ? "bg-green-100 text-green-700"
+                        : "bg-amber-100 text-amber-700"
+                    }`}
+                  >
+                    {e.publicado ? "Publicado" : "Rascunho"}
+                  </span>
+                </div>
                 <p className="truncate text-xs text-ink-muted">
                   /{e.id} · {STATUS_LABEL[e.status]} · {e.cidade}
                 </p>

@@ -59,6 +59,7 @@ function paraLinha(e: (typeof empreendimentos)[number], ordem: number) {
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
     destaque: e.destaque,
+    publicado: e.publicado,
     ordem,
     operacoes: e.operacoes,
     descricao: e.descricao,
