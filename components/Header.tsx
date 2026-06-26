@@ -46,10 +46,10 @@ export default function Header() {
           className="inline-flex items-center"
         >
           <Image
-            src="/logo/mark.svg"
+            src="/logo/mg-mark-novo.svg"
             alt={marca.nome}
-            width={130}
-            height={114}
+            width={312}
+            height={273}
             priority
             unoptimized
             className="h-12 w-auto lg:h-16"
