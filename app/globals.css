@@ -84,3 +84,43 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ---- react-toastify: estilo da marca ---- */
+:root {
+  --toastify-font-family: var(--font-inter), system-ui, sans-serif;
+  --toastify-color-light: rgb(var(--surface));
+  --toastify-text-color-light: rgb(var(--ink));
+  --toastify-color-info: #0f4e9f; /* azul da marca */
+  --toastify-color-success: #15803d;
+  --toastify-color-warning: #b45309;
+  --toastify-color-error: #b91c1c;
+  --toastify-color-progress-info: #0f4e9f;
+  --toastify-color-progress-success: #16a34a;
+  --toastify-color-progress-warning: #d97706;
+  --toastify-color-progress-error: #dc2626;
+  --toastify-toast-bd-radius: 14px;
+}
+
+.Toastify__toast {
+  border: 1px solid rgb(var(--ink) / 0.08);
+  box-shadow: 0 14px 34px -14px rgb(var(--ink) / 0.28);
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  color: rgb(var(--ink));
+}
+
+.Toastify__toast-body {
+  font-weight: 500;
+}
+
+.Toastify__progress-bar {
+  height: 3px;
+}
+
+.Toastify__close-button {
+  color: rgb(var(--ink-muted));
+  opacity: 0.7;
+}
+.Toastify__close-button:hover {
+  opacity: 1;
+}

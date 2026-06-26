@@ -40,7 +40,7 @@ export default function RootLayout({
         <ToastContainer
           position="top-right"
           autoClose={4000}
-          theme="colored"
+          theme="light"
           newestOnTop
           pauseOnHover
         />
