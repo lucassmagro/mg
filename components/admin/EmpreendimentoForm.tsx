@@ -338,7 +338,8 @@ export default function EmpreendimentoForm({
             onChange={(ev) => set("destaque", ev.target.checked)}
             className="h-4 w-4 rounded border-ink/30"
           />
-          Exibir como empreendimento em destaque na home
+          Exibir como empreendimento em destaque na home (apenas um por vez —
+          marcar este desmarca os outros)
         </label>
       </Secao>
 
@@ -358,6 +359,14 @@ export default function EmpreendimentoForm({
             value={e.mapaQuery}
             onChange={(v) => set("mapaQuery", v)}
             className="sm:col-span-2"
+          />
+        </div>
+        <div className="mt-4">
+          <Texto
+            label="Título da seção de localização"
+            value={e.localizacao.titulo ?? ""}
+            onChange={(v) => set("localizacao", { ...e.localizacao, titulo: v })}
+            dica={`Vazio usa o padrão: "No coração de ${e.cidade || "Cidade"}"`}
           />
         </div>
         <div className="mt-4">

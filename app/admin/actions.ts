@@ -68,6 +68,14 @@ export async function salvarEmpreendimento(
 
   if (error) return { ok: false, erro: error.message };
 
+  // Só um empreendimento pode ficar em destaque na home: desmarca os demais.
+  if (e.destaque) {
+    await supabase
+      .from("empreendimentos")
+      .update({ destaque: false })
+      .neq("id", e.id);
+  }
+
   revalidarTudo(e.id);
   return { ok: true };
 }
@@ -109,6 +117,15 @@ export async function alternarDestaque(
   destaque: boolean,
 ): Promise<ResultadoAcao> {
   const supabase = criarClienteServer();
+
+  // Só um pode ficar em destaque: ao ligar um, desliga todos os outros.
+  if (destaque) {
+    await supabase
+      .from("empreendimentos")
+      .update({ destaque: false })
+      .neq("id", id);
+  }
+
   const { error } = await supabase
     .from("empreendimentos")
     .update({ destaque })

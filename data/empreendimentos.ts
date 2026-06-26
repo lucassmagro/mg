@@ -111,6 +111,8 @@ export interface Empreendimento {
   videos: VideoItem[];
   ficha: FichaItem[];
   localizacao: {
+    /** Título da seção (ex.: "No coração de Chapecó"). Vazio usa o padrão. */
+    titulo?: string;
     descricao: string;
     pontos: string[];
   };

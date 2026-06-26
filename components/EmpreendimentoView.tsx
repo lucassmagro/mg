@@ -375,8 +375,11 @@ export default function EmpreendimentoView({
           <div>
             <p className="eyebrow">Localização</p>
             <h2 className="mt-2 font-serif text-3xl font-semibold text-ink">
-              No coração de{" "}
-              <Campo editavel={editavel} value={e.cidade} onCommit={(v) => ed({ cidade: v })} />
+              <Campo
+                editavel={editavel}
+                value={e.localizacao.titulo || `No coração de ${e.cidade}`}
+                onCommit={(v) => ed({ localizacao: { ...e.localizacao, titulo: v } })}
+              />
             </h2>
             <p className="mt-4 leading-relaxed text-ink-soft">
               <Campo
