@@ -215,7 +215,7 @@ export default function EmpreendimentoView({
 
         {/* Card de contato */}
         <aside>
-          <div className="sticky top-24 space-y-4">
+          <div className="sticky top-32 space-y-4">
             <div className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card">
               <p className="font-serif text-xl text-ink">
                 Interessado no {e.nome}?
