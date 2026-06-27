@@ -15,7 +15,6 @@ import { marca, whatsappLink } from "@/lib/config";
 import GaleriaCategorizada from "@/components/GaleriaCategorizada";
 import HeroCarrossel from "@/components/HeroCarrossel";
 import Tipologias from "@/components/Tipologias";
-import VisitForm from "@/components/VisitForm";
 
 /**
  * Texto editável "no lugar". Fora do modo de edição, renderiza o texto puro
@@ -241,11 +240,7 @@ export default function EmpreendimentoView({
                 {marca.telefone}
               </a>
 
-              <div className="my-5 border-t border-ink/10" />
-
-              <VisitForm titulo={e.nome} />
-
-              <p className="mt-4 text-center text-xs text-ink-muted">
+              <p className="mt-6 text-center text-xs text-ink-muted">
                 {marca.nome} · CNPJ {marca.cnpj}
               </p>
             </div>
