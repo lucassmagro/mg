@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
 
 type Img = { src: string; alt: string };
 
@@ -19,6 +19,7 @@ export default function CarrosselRenders({
 }) {
   const [atual, setAtual] = useState(0);
   const [pausado, setPausado] = useState(false);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const total = imagens.length;
 
   const ir = useCallback(
@@ -26,6 +27,13 @@ export default function CarrosselRenders({
     [total],
   );
   const irPara = useCallback((i: number) => setAtual(i), []);
+
+  const fechar = useCallback(() => setLightbox(null), []);
+  const navegarLightbox = useCallback(
+    (dir: number) =>
+      setLightbox((i) => (i === null ? i : (i + dir + total) % total)),
+    [total],
+  );
 
   // Respeita prefers-reduced-motion
   const reduzido = useRef(false);
@@ -35,12 +43,28 @@ export default function CarrosselRenders({
     ).matches;
   }, []);
 
-  // Autoplay
+  // Autoplay (pausa enquanto o lightbox está aberto)
   useEffect(() => {
-    if (pausado || reduzido.current || total <= 1) return;
+    if (pausado || reduzido.current || total <= 1 || lightbox !== null) return;
     const id = setInterval(() => setAtual((i) => (i + 1) % total), intervalo);
     return () => clearInterval(id);
-  }, [pausado, intervalo, total]);
+  }, [pausado, intervalo, total, lightbox]);
+
+  // Teclado + trava de scroll enquanto o lightbox está aberto
+  useEffect(() => {
+    if (lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") fechar();
+      if (e.key === "ArrowRight") navegarLightbox(1);
+      if (e.key === "ArrowLeft") navegarLightbox(-1);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox, fechar, navegarLightbox]);
 
   return (
     <div
@@ -66,15 +90,27 @@ export default function CarrosselRenders({
             aria-label={`${i + 1} de ${total}`}
             aria-hidden={i !== atual}
           >
-            <Image
-              src={img.src}
-              alt={img.alt}
-              fill
-              priority={i === 0}
-              sizes="(max-width: 1024px) 100vw, 1200px"
-              className="object-cover"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/70 to-transparent p-5 pt-16 sm:p-8 sm:pt-20">
+            <button
+              type="button"
+              onClick={() => setLightbox(i)}
+              tabIndex={i === atual ? 0 : -1}
+              aria-label={`Ampliar imagem: ${img.alt}`}
+              className="group/slide absolute inset-0 h-full w-full cursor-zoom-in"
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                priority={i === 0}
+                sizes="(max-width: 1024px) 100vw, 1200px"
+                className="object-cover"
+              />
+              {/* Dica de ampliar (aparece no hover) */}
+              <span className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-night/45 text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover/slide:opacity-100 sm:right-5 sm:top-5">
+                <Expand className="h-5 w-5" />
+              </span>
+            </button>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/70 to-transparent p-5 pt-16 sm:p-8 sm:pt-20">
               <p className="font-serif text-lg text-white sm:text-2xl">
                 {img.alt}
               </p>
@@ -116,6 +152,72 @@ export default function CarrosselRenders({
           />
         ))}
       </div>
+
+      {/* Lightbox — imagem ampliada */}
+      {lightbox !== null && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-night/95 p-4"
+          onClick={fechar}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Imagem ampliada"
+        >
+          <button
+            type="button"
+            onClick={fechar}
+            aria-label="Fechar"
+            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {total > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                navegarLightbox(-1);
+              }}
+              aria-label="Imagem anterior"
+              className="absolute left-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:left-6"
+            >
+              <ChevronLeft className="h-7 w-7" />
+            </button>
+          )}
+
+          <div
+            className="relative h-[80vh] w-full max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              key={imagens[lightbox].src}
+              src={imagens[lightbox].src}
+              alt={imagens[lightbox].alt}
+              fill
+              sizes="100vw"
+              className="object-contain"
+              priority
+            />
+            <p className="absolute inset-x-0 -bottom-9 text-center text-sm text-white/80">
+              {imagens[lightbox].alt} · {lightbox + 1}/{total}
+            </p>
+          </div>
+
+          {total > 1 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                navegarLightbox(1);
+              }}
+              aria-label="Próxima imagem"
+              className="absolute right-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-6"
+            >
+              <ChevronRight className="h-7 w-7" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
