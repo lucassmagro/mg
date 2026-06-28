@@ -90,7 +90,7 @@ export default async function HomePage() {
               espaços bem pensados e um cuidado constante com a qualidade da
               execução estão no centro de cada projeto.
             </p>
-            <p className="mt-4 leading-relaxed text-ink-soft">
+            <p className="mt-4 text-lg leading-relaxed text-ink-soft">
               Acreditamos que um bom imóvel é, antes de tudo, uma boa decisão,
               que valoriza com o tempo e melhora o dia a dia de quem o ocupa.
             </p>
