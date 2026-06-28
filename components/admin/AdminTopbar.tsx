@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { LogOut, Building2 } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { marca } from "@/lib/config";
 import { criarClienteBrowser } from "@/lib/supabase/client";
 
 /**
@@ -28,12 +30,19 @@ export default function AdminTopbar() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           href="/admin"
-          className="flex items-center gap-2 font-serif text-lg font-semibold text-ink"
+          className="flex items-center gap-2.5 font-serif text-lg font-semibold text-ink"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-600 text-white">
-            <Building2 className="h-4 w-4" />
-          </span>
-          Painel · MG Incorporações
+          <Image
+            src="/logo/mg-horizontal.svg"
+            alt={marca.nome}
+            width={210}
+            height={58}
+            priority
+            unoptimized
+            className="h-7 w-auto"
+          />
+          <span className="text-ink-muted">·</span>
+          Painel
         </Link>
 
         <div className="flex items-center gap-3">
