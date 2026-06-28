@@ -23,8 +23,9 @@ export default async function EmpreendimentosPage() {
             Nossos empreendimentos
           </h1>
           <p className="mt-3 max-w-2xl text-ink-soft">
-            Projetos da {marca.nome} pensados para morar, trabalhar e investir.
-            Conheça o que está em comercialização e o que vem por aí.
+            Os projetos da {marca.nome} são pensados para morar, trabalhar e
+            investir, com localização, arquitetura e acabamento à altura. Conheça
+            o que está em comercialização e o que vem por aí.
           </p>
         </div>
       </section>

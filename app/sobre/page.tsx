@@ -68,7 +68,7 @@ export default function SobrePage() {
               e qualidade construtiva. São imóveis que valorizam com o tempo e
               melhoram a rotina de quem os ocupa.
             </p>
-            <p className="mt-4 leading-relaxed text-ink-soft">
+            <p className="mt-4 text-lg leading-relaxed text-ink-soft">
               Nossa equipe acredita que incorporar é, antes de tudo, assumir um
               compromisso de longo prazo com a cidade e com o cliente.
             </p>
