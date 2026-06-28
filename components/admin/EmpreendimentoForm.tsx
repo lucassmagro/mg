@@ -413,8 +413,9 @@ export default function EmpreendimentoForm({
 
       {/* ---- Imagens principais ---- */}
       <Secao titulo="Imagens principais">
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div>
+        <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+          {/* Capa */}
+          <div className="grid content-start gap-y-3 sm:row-span-3 sm:grid-rows-subgrid">
             <CampoUpload
               label="Capa (destaque na home)"
               valor={e.capa}
@@ -422,11 +423,9 @@ export default function EmpreendimentoForm({
               pasta="capa"
               slug={slug}
             />
-            <p className="mt-1.5 text-xs text-ink-muted">
-              Fundo do topo da página inicial quando este empreendimento está
-              marcado como destaque. Também serve de reserva caso não haja
-              galeria. O banner da página do empreendimento é definido na galeria,
-              com a opção "Mostrar no banner do topo".
+            <p className="text-xs text-ink-muted">
+              Fundo do topo da home quando este empreendimento está em destaque.
+              Também serve de reserva caso não haja galeria.
             </p>
             <AjusteImagem
               src={e.capa}
@@ -438,7 +437,9 @@ export default function EmpreendimentoForm({
               nota="A pré-visualização é aproximada; na home o topo é mais largo."
             />
           </div>
-          <div>
+
+          {/* Card */}
+          <div className="grid content-start gap-y-3 sm:row-span-3 sm:grid-rows-subgrid">
             <CampoUpload
               label="Imagem do card"
               valor={e.cartao}
@@ -446,7 +447,7 @@ export default function EmpreendimentoForm({
               pasta="cartao"
               slug={slug}
             />
-            <p className="mt-1.5 text-xs text-ink-muted">
+            <p className="text-xs text-ink-muted">
               Miniatura usada nos cards de listagem (home e portfólio).
             </p>
             <AjusteImagem
@@ -805,7 +806,7 @@ function AjusteImagem({
   const [x, y] = parsePos(pos);
 
   return (
-    <div className="mt-3 rounded-xl border border-ink/10 bg-sand-50 p-3">
+    <div className="rounded-xl border border-ink/10 bg-sand-50 p-3">
       <span className="label">Enquadramento</span>
 
       <div className="mt-2 grid gap-3 sm:grid-cols-[200px_1fr] sm:items-start">
