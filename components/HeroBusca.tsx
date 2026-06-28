@@ -27,6 +27,19 @@ const FAIXAS_ALUGUEL = [
   { label: "Acima de R$ 8.000", max: Infinity },
 ];
 
+/** Pisos de valor (a partir de), conforme a operação. */
+const MINIMOS_VENDA = [
+  { label: "A partir de R$ 300 mil", min: 300_000 },
+  { label: "A partir de R$ 500 mil", min: 500_000 },
+  { label: "A partir de R$ 1 milhão", min: 1_000_000 },
+];
+
+const MINIMOS_ALUGUEL = [
+  { label: "A partir de R$ 2.000", min: 2_000 },
+  { label: "A partir de R$ 4.000", min: 4_000 },
+  { label: "A partir de R$ 8.000", min: 8_000 },
+];
+
 /** Segmentos de atuação da empresa (sem "industrial"). */
 const FINALIDADES: TipoImovel[] = ["residencial", "comercial"];
 
@@ -42,10 +55,12 @@ export default function HeroBusca({
   const [operacao, setOperacao] = useState<Operacao>("comprar");
   const [finalidade, setFinalidade] = useState<TipoImovel | null>(null);
   const [categoria, setCategoria] = useState<string>("todos");
+  const [valorMinIdx, setValorMinIdx] = useState<number | null>(null);
   const [valorMaxIdx, setValorMaxIdx] = useState<number | null>(null);
   const [buscou, setBuscou] = useState(false);
 
   const faixas = operacao === "comprar" ? FAIXAS_VENDA : FAIXAS_ALUGUEL;
+  const minimos = operacao === "comprar" ? MINIMOS_VENDA : MINIMOS_ALUGUEL;
 
   // Imóveis que aceitam a operação atual — base para os filtros dinâmicos.
   const disponiveis = useMemo(
@@ -67,26 +82,32 @@ export default function HeroBusca({
 
   function trocarOperacao(op: Operacao) {
     setOperacao(op);
-    setValorMaxIdx(null); // as faixas mudam entre comprar e alugar
+    setValorMinIdx(null); // as faixas mudam entre comprar e alugar
+    setValorMaxIdx(null);
     setFinalidade(null); // finalidades/tipos se adaptam à nova operação
     setCategoria("todos");
   }
 
   const resultados = useMemo(() => {
+    const valorMin = valorMinIdx === null ? null : minimos[valorMinIdx].min;
     const valorMax = valorMaxIdx === null ? null : faixas[valorMaxIdx].max;
     return lista.filter((e) => {
       if (!e.operacoes.includes(operacao)) return false;
       if (finalidade && e.tipoImovel !== finalidade) return false;
       if (categoria !== "todos" && e.categoria !== categoria) return false;
+      const preco = operacao === "comprar" ? e.precoVenda : e.precoAluguel;
+      if (valorMin !== null) {
+        if (preco == null || preco < valorMin) return false;
+      }
       if (valorMax !== null && valorMax !== Infinity) {
-        const preco = operacao === "comprar" ? e.precoVenda : e.precoAluguel;
         if (preco == null || preco > valorMax) return false;
       }
       return true;
     });
-  }, [lista, operacao, finalidade, categoria, valorMaxIdx, faixas]);
+  }, [lista, operacao, finalidade, categoria, valorMinIdx, valorMaxIdx, faixas, minimos]);
 
-  const labelValor = operacao === "comprar" ? "Valor até" : "Aluguel até";
+  const labelValorMin = operacao === "comprar" ? "Valor a partir de" : "Aluguel a partir de";
+  const labelValorMax = operacao === "comprar" ? "Valor até" : "Aluguel até";
 
   return (
     <>
@@ -127,7 +148,7 @@ export default function HeroBusca({
             </div>
 
             {/* base: card de busca (igual à referência) */}
-            <div className="w-full max-w-4xl">
+            <div className="w-full max-w-5xl">
               {/* abas estilo "pasta" coladas no topo do card */}
               <div className="flex gap-1">
                 {(["alugar", "comprar"] as Operacao[]).map((op) => {
@@ -201,7 +222,7 @@ export default function HeroBusca({
                   <div className="hidden w-px self-stretch bg-white/20 lg:block" />
 
                   {/* Tipo do imóvel */}
-                  <div className="lg:w-44">
+                  <div className="lg:w-40">
                     <span className="label flex items-center gap-1.5 text-white/80">
                       <Tag className="h-3.5 w-3.5 text-accent-200" aria-hidden="true" />
                       Tipo
@@ -220,16 +241,36 @@ export default function HeroBusca({
                     </SelectField>
                   </div>
 
-                  {/* Valor */}
-                  <div className="lg:w-44">
+                  {/* Valor a partir de */}
+                  <div className="lg:w-40">
                     <span className="label flex items-center gap-1.5 text-white/80">
                       <Wallet className="h-3.5 w-3.5 text-accent-200" aria-hidden="true" />
-                      {labelValor}
+                      {labelValorMin}
+                    </span>
+                    <SelectField
+                      value={valorMinIdx === null ? "" : String(valorMinIdx)}
+                      onChange={(v) => setValorMinIdx(v === "" ? null : Number(v))}
+                      ariaLabel={labelValorMin}
+                    >
+                      <option value="">Escolha o valor</option>
+                      {minimos.map((f, i) => (
+                        <option key={f.label} value={i}>
+                          {f.label}
+                        </option>
+                      ))}
+                    </SelectField>
+                  </div>
+
+                  {/* Valor até */}
+                  <div className="lg:w-40">
+                    <span className="label flex items-center gap-1.5 text-white/80">
+                      <Wallet className="h-3.5 w-3.5 text-accent-200" aria-hidden="true" />
+                      {labelValorMax}
                     </span>
                     <SelectField
                       value={valorMaxIdx === null ? "" : String(valorMaxIdx)}
                       onChange={(v) => setValorMaxIdx(v === "" ? null : Number(v))}
-                      ariaLabel={labelValor}
+                      ariaLabel={labelValorMax}
                     >
                       <option value="">Escolha o valor</option>
                       {faixas.map((f, i) => (
