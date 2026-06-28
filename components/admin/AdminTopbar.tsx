@@ -41,7 +41,7 @@ export default function AdminTopbar() {
             unoptimized
             className="h-8 w-auto"
           />
-          Painel
+          Painel administrativo
         </Link>
 
         <div className="flex items-center gap-3">
