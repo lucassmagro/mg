@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import {
   Plus,
   Trash2,
   Loader2,
   GripVertical,
+  ChevronUp,
+  ChevronDown,
   Pencil,
   Eye,
   Globe,
@@ -109,6 +112,32 @@ export default function EmpreendimentoForm({
       nome,
       id: slugTocado ? prev.id : slugify(nome),
     }));
+  }
+
+  // Imagens marcadas para o banner do topo, na ordem atual do carrossel.
+  const bannerSelecionadas = e.galeria
+    .flatMap((c) => c.imagens)
+    .filter((img) => img.banner)
+    .sort((a, b) => (a.bannerOrdem ?? 0) - (b.bannerOrdem ?? 0));
+
+  /** Troca de posição uma imagem do banner e reescreve a ordem na galeria. */
+  function moverBanner(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= bannerSelecionadas.length) return;
+    const lista = [...bannerSelecionadas];
+    [lista[i], lista[j]] = [lista[j], lista[i]];
+    const ordemPorSrc = new Map(lista.map((img, idx) => [img.src, idx]));
+    set(
+      "galeria",
+      e.galeria.map((c) => ({
+        ...c,
+        imagens: c.imagens.map((img) =>
+          img.banner && ordemPorSrc.has(img.src)
+            ? { ...img, bannerOrdem: ordemPorSrc.get(img.src) }
+            : img,
+        ),
+      })),
+    );
   }
 
   function toggleOperacao(op: Operacao) {
@@ -513,6 +542,58 @@ export default function EmpreendimentoForm({
             </div>
           )}
         />
+      </Secao>
+
+      {/* ---- Ordem do banner do topo ---- */}
+      <Secao titulo="Ordem do banner do topo">
+        {bannerSelecionadas.length === 0 ? (
+          <p className="text-sm text-ink-muted">
+            Marque imagens com “Mostrar no banner do topo” na galeria acima para
+            ordená-las aqui. O carrossel do topo segue esta ordem (de cima para
+            baixo).
+          </p>
+        ) : (
+          <ol className="space-y-2">
+            {bannerSelecionadas.map((img, i) => (
+              <li
+                key={img.src}
+                className="flex items-center gap-3 rounded-xl border border-ink/10 bg-sand-50 p-2"
+              >
+                <span className="w-5 text-center text-sm font-semibold text-ink-muted">
+                  {i + 1}
+                </span>
+                <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-sand-100">
+                  {img.src && (
+                    <Image src={img.src} alt="" fill sizes="80px" className="object-cover" />
+                  )}
+                </div>
+                <span className="flex-1 truncate text-sm text-ink-soft">
+                  {img.alt || img.src.split("/").pop()}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moverBanner(i, -1)}
+                    disabled={i === 0}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-ink/15 text-ink-muted hover:text-brand disabled:opacity-30"
+                    title="Mover para cima"
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moverBanner(i, 1)}
+                    disabled={i === bannerSelecionadas.length - 1}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-ink/15 text-ink-muted hover:text-brand disabled:opacity-30"
+                    title="Mover para baixo"
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
       </Secao>
 
       {/* ---- Tipologias ---- */}

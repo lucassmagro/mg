@@ -53,6 +53,8 @@ export interface GaleriaImagem {
   alt: string;
   /** Quando true, a imagem entra no carrossel do banner (hero) do topo. */
   banner?: boolean;
+  /** Posição no carrossel do banner (menor = primeiro). Define a ordem do hero. */
+  bannerOrdem?: number;
 }
 
 export interface GaleriaCategoria {
@@ -393,7 +395,12 @@ export function getTodasImagens(e: Empreendimento) {
  */
 export function getImagensBanner(e: Empreendimento): GaleriaImagem[] {
   const marcadas = getTodasImagens(e).filter((img) => img.banner);
-  if (marcadas.length) return marcadas;
+  if (marcadas.length) {
+    // Ordena pela `bannerOrdem`; sem ela, mantém a ordem da galeria (sort estável).
+    return [...marcadas].sort(
+      (a, b) => (a.bannerOrdem ?? 0) - (b.bannerOrdem ?? 0),
+    );
+  }
   if (e.galeria[0]?.imagens?.length) return e.galeria[0].imagens;
   return e.capa ? [{ src: e.capa, alt: e.nome }] : [];
 }
