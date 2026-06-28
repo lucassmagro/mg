@@ -1,9 +1,11 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { Building2, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { marca } from "@/lib/config";
 import { criarClienteBrowser } from "@/lib/supabase/client";
 
 function LoginForm() {
@@ -40,9 +42,15 @@ function LoginForm() {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-600 text-white">
-            <Building2 className="h-6 w-6" />
-          </span>
+          <Image
+            src="/logo/mg-horizontal.svg"
+            alt={marca.nome}
+            width={210}
+            height={58}
+            priority
+            unoptimized
+            className="h-11 w-auto"
+          />
           <h1 className="mt-4 font-serif text-2xl font-semibold text-ink">
             Painel administrativo
           </h1>
