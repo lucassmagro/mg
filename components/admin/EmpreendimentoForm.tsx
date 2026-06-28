@@ -489,12 +489,23 @@ export default function EmpreendimentoForm({
                         pasta={`galeria/${cat.id || "cat"}`}
                         slug={slug}
                       />
-                      <Area
-                        label="Texto alternativo (alt)"
-                        value={img.alt}
-                        onChange={(v) => upImg({ ...img, alt: v })}
-                        rows={2}
-                      />
+                      <div className="space-y-2">
+                        <Area
+                          label="Texto alternativo (alt)"
+                          value={img.alt}
+                          onChange={(v) => upImg({ ...img, alt: v })}
+                          rows={2}
+                        />
+                        <label className="flex items-center gap-2 text-sm text-ink-soft">
+                          <input
+                            type="checkbox"
+                            checked={!!img.banner}
+                            onChange={(ev) => upImg({ ...img, banner: ev.target.checked })}
+                            className="h-4 w-4 rounded border-ink/30"
+                          />
+                          Mostrar no banner do topo
+                        </label>
+                      </div>
                     </div>
                   )}
                 />

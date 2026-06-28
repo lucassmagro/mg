@@ -9,7 +9,7 @@ import {
   Play,
 } from "lucide-react";
 import type { Empreendimento } from "@/data/empreendimentos";
-import { getTodasImagens, STATUS_LABEL } from "@/data/empreendimentos";
+import { getTodasImagens, getImagensBanner, STATUS_LABEL } from "@/data/empreendimentos";
 import { iconeDiferencial } from "@/lib/diferencialIcons";
 import { marca, whatsappLink } from "@/lib/config";
 import GaleriaCategorizada from "@/components/GaleriaCategorizada";
@@ -70,12 +70,8 @@ export default function EmpreendimentoView({
   const totalImagens = getTodasImagens(e).length;
   const mapaQuery = encodeURIComponent(e.mapaQuery);
   const mensagemWpp = `Olá! Tenho interesse no ${e.nome}. Pode me passar mais informações?`;
-  // Imagens do banner: 1ª categoria da galeria; se vazia, cai para a capa.
-  const heroImagens = e.galeria[0]?.imagens?.length
-    ? e.galeria[0].imagens
-    : e.capa
-      ? [{ src: e.capa, alt: e.nome }]
-      : [];
+  // Imagens do banner: as marcadas como "banner"; senão, 1ª categoria; senão, capa.
+  const heroImagens = getImagensBanner(e);
 
   return (
     <div className="bg-sand-50">

@@ -48,10 +48,17 @@ export interface Diferencial {
   desc: string;
 }
 
+export interface GaleriaImagem {
+  src: string;
+  alt: string;
+  /** Quando true, a imagem entra no carrossel do banner (hero) do topo. */
+  banner?: boolean;
+}
+
 export interface GaleriaCategoria {
   id: string;
   titulo: string;
-  imagens: { src: string; alt: string }[];
+  imagens: GaleriaImagem[];
 }
 
 export interface Tipologia {
@@ -220,7 +227,7 @@ export const empreendimentos: Empreendimento[] = [
           { src: `${IMG}/01-fachada-frontal.jpg`, alt: "Fachada frontal do Valley Business" },
           { src: `${IMG}/04-fachada-sunset.jpg`, alt: "Fachada do Valley Business ao entardecer" },
           { src: `${IMG}/02-pax-fachada-geral-noite.jpg`, alt: "Vista geral da fachada à noite" },
-          { src: `${IMG}/05-fachada-noturna.jpg`, alt: "Fachada noturna iluminada" },
+          { src: `${IMG}/05-fachada-noturna.jpg`, alt: "Fachada noturna iluminada", banner: true },
           { src: `${IMG}/03-fachada-grande-plano-inserida-no-local.jpg`, alt: "A torre inserida na paisagem da cidade" },
           { src: `${IMG}/06-voo-do-passaro-detalhe.jpg`, alt: "Vista aérea em detalhe do empreendimento" },
           { src: `${IMG}/07-embasamento-vista-observador.jpg`, alt: "Embasamento visto do nível da rua" },
@@ -261,10 +268,10 @@ export const empreendimentos: Empreendimento[] = [
         id: "lazer",
         titulo: "Rooftop, terraço & academia",
         imagens: [
-          { src: `${IMG}/18-rooftop-aerea.jpg`, alt: "Vista aérea do rooftop" },
+          { src: `${IMG}/18-rooftop-aerea.jpg`, alt: "Vista aérea do rooftop", banner: true },
           { src: `${IMG}/19-rooftop-bar.jpg`, alt: "Bar do rooftop" },
-          { src: `${IMG}/20-terraco-angulo-1.jpg`, alt: "Terraço, primeiro ângulo" },
-          { src: `${IMG}/21-terraco-angulo-2.jpg`, alt: "Terraço, segundo ângulo" },
+          { src: `${IMG}/20-terraco-angulo-1.jpg`, alt: "Terraço, primeiro ângulo", banner: true },
+          { src: `${IMG}/21-terraco-angulo-2.jpg`, alt: "Terraço, segundo ângulo", banner: true },
           { src: `${IMG}/22-descompressao.jpg`, alt: "Espaço de descompressão" },
           { src: `${IMG}/23-academia-angulo-1.jpg`, alt: "Academia, primeiro ângulo" },
           { src: `${IMG}/24-academia-angulo-2.jpg`, alt: "Academia, segundo ângulo" },
@@ -377,6 +384,18 @@ export function getDestaques(): Empreendimento[] {
 /** Todas as imagens da galeria, achatadas (para lightbox e contagem). */
 export function getTodasImagens(e: Empreendimento) {
   return e.galeria.flatMap((c) => c.imagens);
+}
+
+/**
+ * Imagens do carrossel do banner (hero), na ordem da galeria.
+ * Usa as marcadas como `banner`; se nenhuma estiver marcada, cai para a 1ª
+ * categoria e, por fim, para a capa — preservando o comportamento antigo.
+ */
+export function getImagensBanner(e: Empreendimento): GaleriaImagem[] {
+  const marcadas = getTodasImagens(e).filter((img) => img.banner);
+  if (marcadas.length) return marcadas;
+  if (e.galeria[0]?.imagens?.length) return e.galeria[0].imagens;
+  return e.capa ? [{ src: e.capa, alt: e.nome }] : [];
 }
 
 /** Categorias distintas disponíveis (alimenta o dropdown "Tipo" da busca). */
