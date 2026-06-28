@@ -328,7 +328,7 @@ export const empreendimentos: Empreendimento[] = [
     // ~390 MB, não cabem no GitHub nem no Storage grátis). Posters seguem em /public.
     videos: [
       {
-        titulo: "Valley Business — o filme",
+        titulo: "Valley Business",
         src: `${VIDEO_CDN}/valley-filme.mp4`,
         poster: `${VIDEO}/poster.jpg`,
         formato: "vertical",
