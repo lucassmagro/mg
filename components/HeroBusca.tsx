@@ -100,6 +100,11 @@ export default function HeroBusca({
               fill
               priority
               sizes="100vw"
+              style={{
+                objectPosition: destaque.capaPos || "center",
+                transform: `scale(${destaque.capaZoom ?? 1})`,
+                transformOrigin: destaque.capaPos || "center",
+              }}
               className="object-cover"
             />
             {/* gradiente: escuro à esquerda (texto legível) → transparente à direita */}

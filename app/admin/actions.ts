@@ -31,8 +31,10 @@ function empreendimentoParaLinha(e: Empreendimento) {
     resumo: e.resumo,
     capa: e.capa,
     cartao: e.cartao,
-    cartao_fit: e.cartaoFit ?? "cover",
     cartao_pos: e.cartaoPos ?? "50% 50%",
+    cartao_zoom: String(e.cartaoZoom ?? 1),
+    capa_pos: e.capaPos ?? "50% 50%",
+    capa_zoom: String(e.capaZoom ?? 1),
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
     destaque: e.destaque,
@@ -69,15 +71,16 @@ export async function salvarEmpreendimento(
     .from("empreendimentos")
     .upsert(linha, { onConflict: "id" });
 
-  // Antes da migração das colunas de ajuste do card: salva sem elas para não
-  // quebrar (o ajuste de enquadramento só persiste após rodar o schema.sql).
-  if (error && /cartao_fit|cartao_pos/.test(error.message)) {
-    const semAjusteCard: Record<string, unknown> = { ...linha };
-    delete semAjusteCard.cartao_fit;
-    delete semAjusteCard.cartao_pos;
+  // Antes da migração das colunas de enquadramento: salva sem elas para não
+  // quebrar (o ajuste de posição/zoom só persiste após rodar o schema.sql).
+  if (error && /cartao_pos|cartao_zoom|capa_pos|capa_zoom/.test(error.message)) {
+    const semEnquadramento: Record<string, unknown> = { ...linha };
+    for (const k of ["cartao_pos", "cartao_zoom", "capa_pos", "capa_zoom"]) {
+      delete semEnquadramento[k];
+    }
     ({ error } = await supabase
       .from("empreendimentos")
-      .upsert(semAjusteCard, { onConflict: "id" }));
+      .upsert(semEnquadramento, { onConflict: "id" }));
   }
 
   if (error) return { ok: false, erro: error.message };

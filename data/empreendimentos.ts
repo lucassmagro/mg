@@ -110,10 +110,14 @@ export interface Empreendimento {
   mapaQuery: string;
   capa: string; // hero
   cartao: string; // imagem do card
-  /** Enquadramento da imagem no card: "cover" recorta (padrão); "contain" mostra inteira. */
-  cartaoFit?: "cover" | "contain";
-  /** Posição da imagem no card quando "cover" (object-position CSS, ex.: "50% 30%"). */
+  /** Posição da imagem no card (object-position CSS, ex.: "50% 30%"). */
   cartaoPos?: string;
+  /** Zoom da imagem no card (escala, 1 = sem zoom). */
+  cartaoZoom?: number;
+  /** Posição da capa no hero da home (object-position CSS). */
+  capaPos?: string;
+  /** Zoom da capa no hero da home (escala, 1 = sem zoom). */
+  capaZoom?: number;
   resumo: string;
   descricao: string[]; // parágrafos
   numeros: Numero[];

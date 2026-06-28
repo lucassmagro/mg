@@ -30,8 +30,10 @@ export interface EmpreendimentoRow {
   resumo: string;
   capa: string;
   cartao: string;
-  cartao_fit?: string | null;
   cartao_pos?: string | null;
+  cartao_zoom?: string | number | null;
+  capa_pos?: string | null;
+  capa_zoom?: string | number | null;
   preco_venda: number | null;
   preco_aluguel: number | null;
   destaque: boolean;
@@ -68,8 +70,10 @@ export function linhaParaEmpreendimento(row: EmpreendimentoRow): Empreendimento 
     mapaQuery: row.mapa_query,
     capa: row.capa,
     cartao: row.cartao,
-    cartaoFit: row.cartao_fit === "contain" ? "contain" : "cover",
     cartaoPos: row.cartao_pos ?? "50% 50%",
+    cartaoZoom: Number(row.cartao_zoom) || 1,
+    capaPos: row.capa_pos ?? "50% 50%",
+    capaZoom: Number(row.capa_zoom) || 1,
     resumo: row.resumo,
     descricao: (row.descricao as string[]) ?? [],
     numeros: (row.numeros as Empreendimento["numeros"]) ?? [],

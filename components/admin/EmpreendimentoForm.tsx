@@ -65,8 +65,10 @@ function vazio(): Empreendimento {
     mapaQuery: "",
     capa: "",
     cartao: "",
-    cartaoFit: "cover",
     cartaoPos: "50% 50%",
+    cartaoZoom: 1,
+    capaPos: "50% 50%",
+    capaZoom: 1,
     resumo: "",
     descricao: [],
     numeros: [],
@@ -426,6 +428,15 @@ export default function EmpreendimentoForm({
               galeria. O banner da página do empreendimento é definido na galeria,
               com a opção "Mostrar no banner do topo".
             </p>
+            <AjusteImagem
+              src={e.capa}
+              pos={e.capaPos ?? "50% 50%"}
+              zoom={e.capaZoom ?? 1}
+              onPos={(v) => set("capaPos", v)}
+              onZoom={(v) => set("capaZoom", v)}
+              aspectClass="aspect-[16/9]"
+              nota="A pré-visualização é aproximada; na home o topo é mais largo."
+            />
           </div>
           <div>
             <CampoUpload
@@ -438,12 +449,12 @@ export default function EmpreendimentoForm({
             <p className="mt-1.5 text-xs text-ink-muted">
               Miniatura usada nos cards de listagem (home e portfólio).
             </p>
-            <AjusteCartao
+            <AjusteImagem
               src={e.cartao}
-              fit={e.cartaoFit ?? "cover"}
               pos={e.cartaoPos ?? "50% 50%"}
-              onFit={(v) => set("cartaoFit", v)}
+              zoom={e.cartaoZoom ?? 1}
               onPos={(v) => set("cartaoPos", v)}
+              onZoom={(v) => set("cartaoZoom", v)}
             />
           </div>
         </div>
@@ -773,97 +784,101 @@ function parsePos(pos: string): [number, number] {
   return m ? [Number(m[1]), Number(m[2])] : [50, 50];
 }
 
-/** Controle de enquadramento e posição da imagem do card, com pré-visualização. */
-function AjusteCartao({
+/** Controle de posição e zoom de uma imagem, com pré-visualização ao vivo. */
+function AjusteImagem({
   src,
-  fit,
   pos,
-  onFit,
+  zoom,
   onPos,
+  onZoom,
+  aspectClass = "aspect-[4/3]",
+  nota,
 }: {
   src: string;
-  fit: "cover" | "contain";
   pos: string;
-  onFit: (v: "cover" | "contain") => void;
+  zoom: number;
   onPos: (v: string) => void;
+  onZoom: (v: number) => void;
+  aspectClass?: string;
+  nota?: string;
 }) {
   const [x, y] = parsePos(pos);
-  const botao = (ativo: boolean) =>
-    `rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
-      ativo
-        ? "border-brand bg-accent-50 text-brand"
-        : "border-ink/15 text-ink-soft hover:border-brand hover:text-brand"
-    }`;
 
   return (
     <div className="mt-3 rounded-xl border border-ink/10 bg-sand-50 p-3">
-      <span className="label">Enquadramento no card</span>
-      <div className="mt-1.5 flex flex-wrap gap-2">
-        <button type="button" onClick={() => onFit("cover")} className={botao(fit === "cover")}>
-          Preencher o card
-        </button>
-        <button type="button" onClick={() => onFit("contain")} className={botao(fit === "contain")}>
-          Mostrar imagem inteira
-        </button>
-      </div>
+      <span className="label">Enquadramento</span>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-[200px_1fr] sm:items-start">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-ink/10 bg-sand-100">
+      <div className="mt-2 grid gap-3 sm:grid-cols-[200px_1fr] sm:items-start">
+        <div className={`relative overflow-hidden rounded-lg border border-ink/10 bg-sand-100 ${aspectClass}`}>
           {src ? (
             <Image
               src={src}
               alt=""
               fill
-              sizes="200px"
-              style={{ objectPosition: pos || "center" }}
-              className={fit === "contain" ? "object-contain" : "object-cover"}
+              sizes="220px"
+              style={{
+                objectPosition: pos || "center",
+                transform: `scale(${zoom})`,
+                transformOrigin: pos || "center",
+              }}
+              className="object-cover"
             />
           ) : (
             <div className="flex h-full items-center justify-center px-2 text-center text-xs text-ink-muted">
-              Envie a imagem do card para pré-visualizar
+              Envie a imagem para pré-visualizar
             </div>
           )}
         </div>
 
-        {fit === "cover" ? (
-          <div className="space-y-3">
-            <label className="block text-sm text-ink-soft">
-              Posição horizontal (esquerda e direita)
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={x}
-                onChange={(ev) => onPos(`${Number(ev.target.value)}% ${y}%`)}
-                className="mt-1 w-full accent-brand"
-              />
-            </label>
-            <label className="block text-sm text-ink-soft">
-              Posição vertical (topo e base)
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={y}
-                onChange={(ev) => onPos(`${x}% ${Number(ev.target.value)}%`)}
-                className="mt-1 w-full accent-brand"
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() => onPos("50% 50%")}
-              className="text-xs font-medium text-brand hover:underline"
-            >
-              Centralizar
-            </button>
-          </div>
-        ) : (
-          <p className="text-sm text-ink-muted">
-            A imagem aparece inteira, sem cortes. Pode sobrar uma faixa neutra ao
-            redor quando a proporção for diferente da do card.
-          </p>
-        )}
+        <div className="space-y-3">
+          <label className="block text-sm text-ink-soft">
+            Posição horizontal (esquerda e direita)
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={x}
+              onChange={(ev) => onPos(`${Number(ev.target.value)}% ${y}%`)}
+              className="mt-1 w-full accent-brand"
+            />
+          </label>
+          <label className="block text-sm text-ink-soft">
+            Posição vertical (topo e base)
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={y}
+              onChange={(ev) => onPos(`${x}% ${Number(ev.target.value)}%`)}
+              className="mt-1 w-full accent-brand"
+            />
+          </label>
+          <label className="block text-sm text-ink-soft">
+            Zoom ({Math.round(zoom * 100)}%)
+            <input
+              type="range"
+              min={100}
+              max={250}
+              step={5}
+              value={Math.round(zoom * 100)}
+              onChange={(ev) => onZoom(Number(ev.target.value) / 100)}
+              className="mt-1 w-full accent-brand"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => {
+              onPos("50% 50%");
+              onZoom(1);
+            }}
+            className="text-xs font-medium text-brand hover:underline"
+          >
+            Redefinir
+          </button>
+        </div>
       </div>
+
+      {nota && <p className="mt-2 text-xs text-ink-muted">{nota}</p>}
     </div>
   );
 }
