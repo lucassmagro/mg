@@ -41,7 +41,6 @@ export default function AdminTopbar() {
             unoptimized
             className="h-8 w-auto"
           />
-          <span className="text-ink-muted">·</span>
           Painel
         </Link>
 
