@@ -1116,18 +1116,27 @@ function Repetivel<T>({
   rotuloAdd: string;
   render: (item: T, i: number, update: (novo: T) => void) => React.ReactNode;
 }) {
+  const [arrastando, setArrastando] = useState<number | null>(null);
+  const [arrastavel, setArrastavel] = useState<number | null>(null);
+  const [sobre, setSobre] = useState<number | null>(null);
+
   function update(i: number, val: T) {
     onChange(itens.map((it, j) => (j === i ? val : it)));
   }
   function remover(i: number) {
     onChange(itens.filter((_, j) => j !== i));
   }
-  function mover(i: number, dir: -1 | 1) {
-    const j = i + dir;
-    if (j < 0 || j >= itens.length) return;
+  function reordenar(de: number, para: number) {
+    if (de === para || de < 0 || para < 0) return;
     const copia = [...itens];
-    [copia[i], copia[j]] = [copia[j], copia[i]];
+    const [item] = copia.splice(de, 1);
+    copia.splice(para, 0, item);
     onChange(copia);
+  }
+  function finalizarArraste() {
+    setArrastando(null);
+    setArrastavel(null);
+    setSobre(null);
   }
 
   return (
@@ -1135,15 +1144,37 @@ function Repetivel<T>({
       {itens.map((item, i) => (
         <div
           key={i}
-          className="flex items-start gap-3 rounded-xl border border-ink/10 bg-sand-50 p-3"
+          draggable={arrastavel === i}
+          onDragStart={(e) => {
+            setArrastando(i);
+            e.dataTransfer.effectAllowed = "move";
+          }}
+          onDragOver={(e) => {
+            if (arrastando === null) return;
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+            if (sobre !== i) setSobre(i);
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (arrastando !== null) reordenar(arrastando, i);
+            finalizarArraste();
+          }}
+          onDragEnd={finalizarArraste}
+          className={`flex items-start gap-3 rounded-xl border bg-sand-50 p-3 transition-colors ${
+            sobre === i && arrastando !== null && arrastando !== i
+              ? "border-brand ring-1 ring-brand"
+              : "border-ink/10"
+          } ${arrastando === i ? "opacity-40" : ""}`}
         >
           <div className="flex flex-col items-center gap-1 pt-1">
             <button
               type="button"
-              onClick={() => mover(i, -1)}
-              className="text-ink-muted hover:text-brand disabled:opacity-30"
-              disabled={i === 0}
-              title="Mover para cima"
+              onMouseDown={() => setArrastavel(i)}
+              onMouseUp={() => setArrastavel(null)}
+              className="cursor-grab text-ink-muted hover:text-brand active:cursor-grabbing"
+              title="Arraste para reordenar"
+              aria-label="Arraste para reordenar"
             >
               <GripVertical className="h-4 w-4" />
             </button>
