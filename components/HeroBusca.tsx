@@ -114,7 +114,7 @@ export default function HeroBusca({
       {/* HERO com busca sobreposta */}
       <section className="px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8">
         <div className="relative isolate overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 -z-10 bg-night">
             <Image
               src={destaque.capa || destaque.cartao}
               alt={`Vista do empreendimento ${destaque.nome}`}
@@ -126,7 +126,7 @@ export default function HeroBusca({
                 transform: `scale(${destaque.capaZoom ?? 1})`,
                 transformOrigin: destaque.capaPos || "center",
               }}
-              className="object-cover"
+              className="object-contain"
             />
             {/* gradiente: escuro à esquerda (texto legível) → transparente à direita */}
             <div className="absolute inset-0 bg-gradient-to-r from-night/85 via-night/55 to-night/10" />

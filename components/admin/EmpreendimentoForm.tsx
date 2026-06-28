@@ -821,7 +821,7 @@ function AjusteImagem({
                 transform: `scale(${zoom})`,
                 transformOrigin: pos || "center",
               }}
-              className="object-cover"
+              className="object-contain"
             />
           ) : (
             <div className="flex h-full items-center justify-center px-2 text-center text-xs text-ink-muted">
@@ -864,6 +864,9 @@ function AjusteImagem({
               onChange={(ev) => onZoom(Number(ev.target.value) / 100)}
               className="mt-1 w-full accent-brand"
             />
+            <span className="mt-1 block text-xs text-ink-muted">
+              Em 100% a imagem aparece inteira; aumente para preencher e recortar.
+            </span>
           </label>
           <button
             type="button"
