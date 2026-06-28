@@ -65,6 +65,8 @@ function vazio(): Empreendimento {
     mapaQuery: "",
     capa: "",
     cartao: "",
+    cartaoFit: "cover",
+    cartaoPos: "50% 50%",
     resumo: "",
     descricao: [],
     numeros: [],
@@ -436,6 +438,13 @@ export default function EmpreendimentoForm({
             <p className="mt-1.5 text-xs text-ink-muted">
               Miniatura usada nos cards de listagem (home e portfólio).
             </p>
+            <AjusteCartao
+              src={e.cartao}
+              fit={e.cartaoFit ?? "cover"}
+              pos={e.cartaoPos ?? "50% 50%"}
+              onFit={(v) => set("cartaoFit", v)}
+              onPos={(v) => set("cartaoPos", v)}
+            />
           </div>
         </div>
       </Secao>
@@ -755,6 +764,107 @@ function Secao({ titulo, children }: { titulo: string; children: React.ReactNode
       <h2 className="font-serif text-lg font-semibold text-ink">{titulo}</h2>
       <div className="mt-4">{children}</div>
     </section>
+  );
+}
+
+/** Lê "X% Y%" em [x, y] numéricos (padrão 50, 50). */
+function parsePos(pos: string): [number, number] {
+  const m = pos.match(/(-?\d+(?:\.\d+)?)%\s+(-?\d+(?:\.\d+)?)%/);
+  return m ? [Number(m[1]), Number(m[2])] : [50, 50];
+}
+
+/** Controle de enquadramento e posição da imagem do card, com pré-visualização. */
+function AjusteCartao({
+  src,
+  fit,
+  pos,
+  onFit,
+  onPos,
+}: {
+  src: string;
+  fit: "cover" | "contain";
+  pos: string;
+  onFit: (v: "cover" | "contain") => void;
+  onPos: (v: string) => void;
+}) {
+  const [x, y] = parsePos(pos);
+  const botao = (ativo: boolean) =>
+    `rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+      ativo
+        ? "border-brand bg-accent-50 text-brand"
+        : "border-ink/15 text-ink-soft hover:border-brand hover:text-brand"
+    }`;
+
+  return (
+    <div className="mt-3 rounded-xl border border-ink/10 bg-sand-50 p-3">
+      <span className="label">Enquadramento no card</span>
+      <div className="mt-1.5 flex flex-wrap gap-2">
+        <button type="button" onClick={() => onFit("cover")} className={botao(fit === "cover")}>
+          Preencher o card
+        </button>
+        <button type="button" onClick={() => onFit("contain")} className={botao(fit === "contain")}>
+          Mostrar imagem inteira
+        </button>
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-[200px_1fr] sm:items-start">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-ink/10 bg-sand-100">
+          {src ? (
+            <Image
+              src={src}
+              alt=""
+              fill
+              sizes="200px"
+              style={{ objectPosition: pos || "center" }}
+              className={fit === "contain" ? "object-contain" : "object-cover"}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center px-2 text-center text-xs text-ink-muted">
+              Envie a imagem do card para pré-visualizar
+            </div>
+          )}
+        </div>
+
+        {fit === "cover" ? (
+          <div className="space-y-3">
+            <label className="block text-sm text-ink-soft">
+              Posição horizontal (esquerda e direita)
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={x}
+                onChange={(ev) => onPos(`${Number(ev.target.value)}% ${y}%`)}
+                className="mt-1 w-full accent-brand"
+              />
+            </label>
+            <label className="block text-sm text-ink-soft">
+              Posição vertical (topo e base)
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={y}
+                onChange={(ev) => onPos(`${x}% ${Number(ev.target.value)}%`)}
+                className="mt-1 w-full accent-brand"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => onPos("50% 50%")}
+              className="text-xs font-medium text-brand hover:underline"
+            >
+              Centralizar
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-ink-muted">
+            A imagem aparece inteira, sem cortes. Pode sobrar uma faixa neutra ao
+            redor quando a proporção for diferente da do card.
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 

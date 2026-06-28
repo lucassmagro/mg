@@ -56,6 +56,8 @@ function paraLinha(e: (typeof empreendimentos)[number], ordem: number) {
     resumo: e.resumo,
     capa: e.capa,
     cartao: e.cartao,
+    cartao_fit: e.cartaoFit ?? "cover",
+    cartao_pos: e.cartaoPos ?? "50% 50%",
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
     destaque: e.destaque,

@@ -18,14 +18,17 @@ export default function EmpreendimentoCard({
 }) {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-ink/10 bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
-      <div className="relative block aspect-[4/3] transform-gpu overflow-hidden rounded-t-2xl">
+      <div className="relative block aspect-[4/3] transform-gpu overflow-hidden rounded-t-2xl bg-sand-100">
         <Image
           src={e.cartao}
           alt={`Imagem do empreendimento ${e.nome}`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           priority={priority}
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          style={{ objectPosition: e.cartaoPos || "center" }}
+          className={`transition-transform duration-500 group-hover:scale-105 ${
+            e.cartaoFit === "contain" ? "object-contain" : "object-cover"
+          }`}
         />
         <div className="absolute left-3 top-3 flex gap-2">
           <span className="rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">

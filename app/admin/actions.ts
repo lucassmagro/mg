@@ -31,6 +31,8 @@ function empreendimentoParaLinha(e: Empreendimento) {
     resumo: e.resumo,
     capa: e.capa,
     cartao: e.cartao,
+    cartao_fit: e.cartaoFit ?? "cover",
+    cartao_pos: e.cartaoPos ?? "50% 50%",
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
     destaque: e.destaque,
@@ -62,9 +64,21 @@ export async function salvarEmpreendimento(
   if (!e.nome?.trim()) return { ok: false, erro: "O nome é obrigatório." };
 
   const supabase = criarClienteServer();
-  const { error } = await supabase
+  const linha = empreendimentoParaLinha(e);
+  let { error } = await supabase
     .from("empreendimentos")
-    .upsert(empreendimentoParaLinha(e), { onConflict: "id" });
+    .upsert(linha, { onConflict: "id" });
+
+  // Antes da migração das colunas de ajuste do card: salva sem elas para não
+  // quebrar (o ajuste de enquadramento só persiste após rodar o schema.sql).
+  if (error && /cartao_fit|cartao_pos/.test(error.message)) {
+    const semAjusteCard: Record<string, unknown> = { ...linha };
+    delete semAjusteCard.cartao_fit;
+    delete semAjusteCard.cartao_pos;
+    ({ error } = await supabase
+      .from("empreendimentos")
+      .upsert(semAjusteCard, { onConflict: "id" }));
+  }
 
   if (error) return { ok: false, erro: error.message };
 

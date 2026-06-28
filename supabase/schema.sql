@@ -28,6 +28,8 @@ create table if not exists public.empreendimentos (
   resumo        text not null default '',
   capa          text not null default '',            -- URL da imagem de capa (hero)
   cartao        text not null default '',            -- URL da imagem do card
+  cartao_fit    text not null default 'cover',       -- cover (recorta) | contain (inteira)
+  cartao_pos    text not null default '50% 50%',     -- object-position do card quando cover
   preco_venda   numeric,                             -- "a partir de" (opcional)
   preco_aluguel numeric,                             -- "a partir de" (opcional)
   destaque      boolean not null default false,
@@ -50,9 +52,13 @@ create table if not exists public.empreendimentos (
   updated_at    timestamptz not null default now()
 );
 
--- Para bancos criados antes desta coluna existir (idempotente):
+-- Para bancos criados antes destas colunas existirem (idempotente):
 alter table public.empreendimentos
   add column if not exists publicado boolean not null default false;
+alter table public.empreendimentos
+  add column if not exists cartao_fit text not null default 'cover';
+alter table public.empreendimentos
+  add column if not exists cartao_pos text not null default '50% 50%';
 
 create index if not exists empreendimentos_ordem_idx on public.empreendimentos (ordem);
 create index if not exists empreendimentos_destaque_idx on public.empreendimentos (destaque);
