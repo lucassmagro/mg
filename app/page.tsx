@@ -85,10 +85,10 @@ export default async function HomePage() {
               Construímos endereços para a próxima década
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              A {marca.nome} se dedica a empreendimentos que fazem diferença na
-              rotina das pessoas e dos negócios. Localizações privilegiadas,
-              espaços bem pensados e um cuidado constante com a qualidade da
-              execução estão no centro de cada projeto.
+              Nossa incorporadora se dedica a empreendimentos que fazem diferença
+              na rotina das pessoas e dos negócios. Excelentes localizações,
+              espaços bem pensados e cuidadosamente planejados além da alta
+              qualidade na execução são nosso foco.
             </p>
             <p className="mt-4 text-lg leading-relaxed text-ink-soft">
               Acreditamos que um bom imóvel é, antes de tudo, uma boa decisão,
