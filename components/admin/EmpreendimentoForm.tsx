@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -344,12 +344,12 @@ export default function EmpreendimentoForm({
         </div>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <Numero
+          <Moeda
             label="Preço de venda — a partir de (R$)"
             value={e.precoVenda}
             onChange={(v) => set("precoVenda", v)}
           />
-          <Numero
+          <Moeda
             label="Preço de aluguel — a partir de (R$/mês)"
             value={e.precoAluguel}
             onChange={(v) => set("precoAluguel", v)}
@@ -916,7 +916,25 @@ function Texto({
   );
 }
 
-function Numero({
+/** Formata um número em reais com separador de milhar e centavos: 332000 -> "332.000,00". */
+function formatarReais(v?: number): string {
+  if (v === undefined || Number.isNaN(v)) return "";
+  return new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(v);
+}
+
+/** Lê um texto digitado (ex.: "332.000,00", "332000", "350.000,5") em número de reais. */
+function parseReais(texto: string): number | undefined {
+  const limpo = texto.replace(/[^\d,]/g, "").replace(",", ".");
+  if (limpo === "") return undefined;
+  const n = Number(limpo);
+  return Number.isNaN(n) ? undefined : n;
+}
+
+/** Campo de moeda BRL: mostra "332.000,00" e salva o número em reais. */
+function Moeda({
   label,
   value,
   onChange,
@@ -925,18 +943,39 @@ function Numero({
   value?: number;
   onChange: (v: number | undefined) => void;
 }) {
+  const [texto, setTexto] = useState(formatarReais(value));
+  const [focado, setFocado] = useState(false);
+
+  // Reflete mudanças externas no valor quando o campo não está em edição.
+  useEffect(() => {
+    if (!focado) setTexto(formatarReais(value));
+  }, [value, focado]);
+
   return (
     <div>
       <label className="label">{label}</label>
-      <input
-        type="number"
-        min={0}
-        value={value ?? ""}
-        onChange={(e) =>
-          onChange(e.target.value === "" ? undefined : Number(e.target.value))
-        }
-        className="field mt-1.5"
-      />
+      <div className="relative mt-1.5">
+        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-ink-muted">
+          R$
+        </span>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={texto}
+          onFocus={() => {
+            setFocado(true);
+            setTexto(value === undefined ? "" : String(value).replace(".", ","));
+          }}
+          onChange={(ev) => setTexto(ev.target.value)}
+          onBlur={() => {
+            setFocado(false);
+            const n = parseReais(texto);
+            onChange(n);
+            setTexto(formatarReais(n));
+          }}
+          className="field pl-9"
+        />
+      </div>
     </div>
   );
 }
