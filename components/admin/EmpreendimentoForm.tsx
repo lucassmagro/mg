@@ -350,9 +350,19 @@ export default function EmpreendimentoForm({
             onChange={(v) => set("precoVenda", v)}
           />
           <Moeda
+            label="Preço de venda — até (R$)"
+            value={e.precoVendaAte}
+            onChange={(v) => set("precoVendaAte", v)}
+          />
+          <Moeda
             label="Preço de aluguel — a partir de (R$/mês)"
             value={e.precoAluguel}
             onChange={(v) => set("precoAluguel", v)}
+          />
+          <Moeda
+            label="Preço de aluguel — até (R$/mês)"
+            value={e.precoAluguelAte}
+            onChange={(v) => set("precoAluguelAte", v)}
           />
         </div>
 

@@ -37,6 +37,8 @@ function empreendimentoParaLinha(e: Empreendimento) {
     capa_zoom: String(e.capaZoom ?? 1),
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
+    preco_venda_ate: e.precoVendaAte ?? null,
+    preco_aluguel_ate: e.precoAluguelAte ?? null,
     destaque: e.destaque,
     publicado: e.publicado,
     operacoes: e.operacoes,
@@ -71,16 +73,22 @@ export async function salvarEmpreendimento(
     .from("empreendimentos")
     .upsert(linha, { onConflict: "id" });
 
-  // Antes da migração das colunas de enquadramento: salva sem elas para não
-  // quebrar (o ajuste de posição/zoom só persiste após rodar o schema.sql).
-  if (error && /cartao_pos|cartao_zoom|capa_pos|capa_zoom/.test(error.message)) {
-    const semEnquadramento: Record<string, unknown> = { ...linha };
-    for (const k of ["cartao_pos", "cartao_zoom", "capa_pos", "capa_zoom"]) {
-      delete semEnquadramento[k];
-    }
+  // Antes da migração das colunas mais novas: salva sem elas para não quebrar
+  // (enquadramento e preço "até" só persistem após rodar o schema.sql).
+  const colunasNovas = [
+    "cartao_pos",
+    "cartao_zoom",
+    "capa_pos",
+    "capa_zoom",
+    "preco_venda_ate",
+    "preco_aluguel_ate",
+  ];
+  if (error && colunasNovas.some((c) => error!.message.includes(c))) {
+    const semColunasNovas: Record<string, unknown> = { ...linha };
+    for (const k of colunasNovas) delete semColunasNovas[k];
     ({ error } = await supabase
       .from("empreendimentos")
-      .upsert(semEnquadramento, { onConflict: "id" }));
+      .upsert(semColunasNovas, { onConflict: "id" }));
   }
 
   if (error) return { ok: false, erro: error.message };

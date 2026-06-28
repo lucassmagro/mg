@@ -36,6 +36,8 @@ export interface EmpreendimentoRow {
   capa_zoom?: string | number | null;
   preco_venda: number | null;
   preco_aluguel: number | null;
+  preco_venda_ate?: number | null;
+  preco_aluguel_ate?: number | null;
   destaque: boolean;
   publicado: boolean;
   ordem: number;
@@ -64,6 +66,8 @@ export function linhaParaEmpreendimento(row: EmpreendimentoRow): Empreendimento 
     operacoes: (row.operacoes as Operacao[]) ?? [],
     precoVenda: row.preco_venda ?? undefined,
     precoAluguel: row.preco_aluguel ?? undefined,
+    precoVendaAte: row.preco_venda_ate ?? undefined,
+    precoAluguelAte: row.preco_aluguel_ate ?? undefined,
     cidade: row.cidade,
     bairro: row.bairro,
     endereco: row.endereco,

@@ -62,6 +62,8 @@ function paraLinha(e: (typeof empreendimentos)[number], ordem: number) {
     capa_zoom: String(e.capaZoom ?? 1),
     preco_venda: e.precoVenda ?? null,
     preco_aluguel: e.precoAluguel ?? null,
+    preco_venda_ate: e.precoVendaAte ?? null,
+    preco_aluguel_ate: e.precoAluguelAte ?? null,
     destaque: e.destaque,
     publicado: e.publicado,
     ordem,

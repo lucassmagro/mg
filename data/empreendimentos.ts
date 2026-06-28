@@ -104,6 +104,9 @@ export interface Empreendimento {
   /** Valores "a partir de" — ilustrativos (protótipo); alimentam o filtro de preço. */
   precoVenda?: number;
   precoAluguel?: number;
+  /** Valores "até" — limite superior da faixa de preço (opcional). */
+  precoVendaAte?: number;
+  precoAluguelAte?: number;
   cidade: string;
   bairro: string;
   endereco: string;

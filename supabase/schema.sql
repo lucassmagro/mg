@@ -32,8 +32,10 @@ create table if not exists public.empreendimentos (
   cartao_zoom   text not null default '1',           -- zoom (escala) do card
   capa_pos      text not null default '50% 50%',     -- object-position da capa (hero da home)
   capa_zoom     text not null default '1',           -- zoom (escala) da capa
-  preco_venda   numeric,                             -- "a partir de" (opcional)
-  preco_aluguel numeric,                             -- "a partir de" (opcional)
+  preco_venda       numeric,                         -- venda "a partir de" (opcional)
+  preco_aluguel     numeric,                         -- aluguel "a partir de" (opcional)
+  preco_venda_ate   numeric,                         -- venda "até" (opcional)
+  preco_aluguel_ate numeric,                         -- aluguel "até" (opcional)
   destaque      boolean not null default false,
   publicado     boolean not null default false,      -- rascunho (false) não aparece no site
   ordem         integer not null default 0,          -- ordenação na listagem
@@ -65,6 +67,10 @@ alter table public.empreendimentos
   add column if not exists capa_pos text not null default '50% 50%';
 alter table public.empreendimentos
   add column if not exists capa_zoom text not null default '1';
+alter table public.empreendimentos
+  add column if not exists preco_venda_ate numeric;
+alter table public.empreendimentos
+  add column if not exists preco_aluguel_ate numeric;
 
 create index if not exists empreendimentos_ordem_idx on public.empreendimentos (ordem);
 create index if not exists empreendimentos_destaque_idx on public.empreendimentos (destaque);
