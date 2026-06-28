@@ -31,7 +31,7 @@ export default function EmpreendimentoCard({
               transform: `scale(${e.cartaoZoom ?? 1})`,
               transformOrigin: e.cartaoPos || "center",
             }}
-            className="object-contain"
+            className="object-cover"
           />
         </div>
         <div className="absolute left-3 top-3 flex gap-2">
