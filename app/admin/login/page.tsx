@@ -43,13 +43,13 @@ function LoginForm() {
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
           <Image
-            src="/logo/mg-horizontal.svg"
+            src="/logo/mg-mark-novo.svg"
             alt={marca.nome}
-            width={210}
-            height={58}
+            width={312}
+            height={273}
             priority
             unoptimized
-            className="h-11 w-auto"
+            className="h-14 w-auto"
           />
           <h1 className="mt-4 font-serif text-2xl font-semibold text-ink">
             Painel administrativo

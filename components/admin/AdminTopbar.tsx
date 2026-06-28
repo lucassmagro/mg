@@ -33,13 +33,13 @@ export default function AdminTopbar() {
           className="flex items-center gap-2.5 font-serif text-lg font-semibold text-ink"
         >
           <Image
-            src="/logo/mg-horizontal.svg"
+            src="/logo/mg-mark-novo.svg"
             alt={marca.nome}
-            width={210}
-            height={58}
+            width={312}
+            height={273}
             priority
             unoptimized
-            className="h-7 w-auto"
+            className="h-8 w-auto"
           />
           <span className="text-ink-muted">·</span>
           Painel
