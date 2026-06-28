@@ -410,20 +410,33 @@ export default function EmpreendimentoForm({
       {/* ---- Imagens principais ---- */}
       <Secao titulo="Imagens principais">
         <div className="grid gap-6 sm:grid-cols-2">
-          <CampoUpload
-            label="Capa (banner / hero)"
-            valor={e.capa}
-            onChange={(v) => set("capa", v)}
-            pasta="capa"
-            slug={slug}
-          />
-          <CampoUpload
-            label="Imagem do card"
-            valor={e.cartao}
-            onChange={(v) => set("cartao", v)}
-            pasta="cartao"
-            slug={slug}
-          />
+          <div>
+            <CampoUpload
+              label="Capa (destaque na home)"
+              valor={e.capa}
+              onChange={(v) => set("capa", v)}
+              pasta="capa"
+              slug={slug}
+            />
+            <p className="mt-1.5 text-xs text-ink-muted">
+              Fundo do topo da página inicial quando este empreendimento está
+              marcado como destaque. Também serve de reserva caso não haja
+              galeria. O banner da página do empreendimento é definido na galeria,
+              com a opção "Mostrar no banner do topo".
+            </p>
+          </div>
+          <div>
+            <CampoUpload
+              label="Imagem do card"
+              valor={e.cartao}
+              onChange={(v) => set("cartao", v)}
+              pasta="cartao"
+              slug={slug}
+            />
+            <p className="mt-1.5 text-xs text-ink-muted">
+              Miniatura usada nos cards de listagem (home e portfólio).
+            </p>
+          </div>
         </div>
       </Secao>
 

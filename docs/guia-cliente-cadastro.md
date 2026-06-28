@@ -45,11 +45,15 @@ Clique em **Empreendimentos → Novo** (ou no botão de adicionar). Uma boa dica
 - **Descrição:** texto completo; pode usar vários parágrafos.
 
 ### 5. Enviar as imagens
-- **Imagem de capa:** a foto principal (fachada), usada no topo da página.
+- **Capa (destaque na home):** a foto de fundo do topo da página inicial quando
+  este empreendimento está marcado como destaque. Também é usada como reserva caso
+  não haja galeria.
 - **Imagem do card:** a foto que aparece na listagem.
 - **Galeria:** crie **categorias** (ex.: Fachada, Recepção, Lazer) e adicione as
   fotos em cada uma. Em cada imagem, escreva uma **descrição curta** (ajuda na
-  acessibilidade e no Google).
+  acessibilidade e no Google). Marque **"Mostrar no banner do topo"** nas fotos
+  que devem aparecer no carrossel do topo da página, e ajuste a sequência na
+  seção **"Ordem do banner do topo"**.
 
 ### 6. Cadastrar as plantas
 - **Tipologias:** para cada tipo de sala, informe nome, metragem, um resumo e
