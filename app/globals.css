@@ -19,6 +19,26 @@
 
   html {
     scroll-behavior: smooth;
+    /* Barra de rolagem nas cores da marca (Firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--brand)) rgb(var(--sand-100));
+  }
+
+  /* Barra de rolagem nas cores da marca (Chrome/Edge/Safari) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--sand-100));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--brand));
+    border-radius: 9999px;
+    border: 3px solid rgb(var(--sand-100));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0d4185;
   }
 
   body {
