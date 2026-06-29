@@ -1,9 +1,62 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import type { GaleriaCategoria } from "@/data/empreendimentos";
+
+/**
+ * Layout do mosaico "bento" (a partir de `sm`, grade de 3 colunas).
+ *
+ * Cada imagem recebe um "footprint" (tamanho na grade). Eles são agrupados em
+ * BANDAS que sempre preenchem linhas inteiras de 3 colunas — assim, somando
+ * bandas, o mosaico SEMPRE fecha um retângulo perfeito (sem buracos na última
+ * linha), para qualquer quantidade de imagens.
+ *
+ *   FEATURE (5 imgs, 3×3): destaque grande 2×2 + alto 1×2 + 3 menores
+ *   TRIO    (3 imgs, 1 linha): 3 menores
+ *   PAIR    (2 imgs, 1 linha): largo 2×1 + 1 menor
+ *   SINGLE  (1 img): ocupa a linha inteira
+ */
+const SMALL = "";
+const BIG = "sm:col-span-2 sm:row-span-2";
+const TALL = "sm:row-span-2";
+const WIDE = "sm:col-span-2";
+const FULL = "sm:col-span-3";
+
+const FEATURE = [BIG, TALL, SMALL, SMALL, SMALL];
+const TRIO = [SMALL, SMALL, SMALL];
+const PAIR = [WIDE, SMALL];
+const SINGLE = [FULL];
+
+function layoutMosaico(n: number): string[] {
+  const bandas: string[][] = [];
+  let resto = n;
+  // Consome destaques enquanto sobrar o bastante para fechar o resto certinho.
+  while (resto >= 8) {
+    bandas.push(FEATURE);
+    resto -= 5;
+  }
+  // Fecha o restante (0–7) só com bandas retangulares.
+  if (resto === 1) bandas.push(SINGLE);
+  else if (resto === 2) bandas.push(PAIR);
+  else if (resto === 3) bandas.push(TRIO);
+  else if (resto === 4) bandas.push(PAIR, PAIR);
+  else if (resto === 5) bandas.push(FEATURE);
+  else if (resto === 6) bandas.push(TRIO, TRIO);
+  else if (resto === 7) bandas.push(FEATURE, PAIR);
+
+  const footprints = bandas.flat();
+
+  // Mobile (2 colunas): se for ímpar, o último tile ocupa a linha toda para
+  // a grade também fechar um retângulo no celular.
+  if (n % 2 === 1 && footprints.length > 0) {
+    const ultimo = footprints.length - 1;
+    footprints[ultimo] =
+      footprints[ultimo] === FULL ? `col-span-2 ${FULL}` : "col-span-2 sm:col-span-1";
+  }
+  return footprints;
+}
 
 export default function GaleriaCategorizada({
   galeria,
@@ -14,6 +67,7 @@ export default function GaleriaCategorizada({
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   const imagens = galeria[catAtiva].imagens;
+  const footprints = useMemo(() => layoutMosaico(imagens.length), [imagens.length]);
 
   const fechar = useCallback(() => setLightbox(null), []);
   const navegar = useCallback(
@@ -60,24 +114,43 @@ export default function GaleriaCategorizada({
         ))}
       </div>
 
-      {/* Grade de imagens — uniforme e alinhada */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+      {/* Mosaico bento — destaque grande + tiles ao redor, hover com legenda */}
+      <div className="mt-6 grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[185px] sm:grid-cols-3 sm:gap-4 lg:auto-rows-[210px]">
         {imagens.map((img, i) => (
           <button
             key={img.src}
             type="button"
             onClick={() => setLightbox(i)}
-            className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-sand-200"
+            className={`group relative overflow-hidden rounded-2xl bg-sand-200 ${footprints[i] ?? ""}`}
             aria-label={`Ampliar: ${img.alt}`}
           >
             <Image
               src={img.src}
               alt={img.alt}
               fill
-              sizes="(max-width: 1024px) 50vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
-            <span className="absolute inset-0 bg-night/0 transition-colors group-hover:bg-night/10" />
+
+            {/* gradiente base sutil — dá profundidade mesmo sem hover */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-gradient-to-t from-night/35 via-night/0 to-night/0 opacity-70 transition-opacity duration-300 group-hover:opacity-0"
+            />
+
+            {/* overlay no hover: escurece e revela legenda + botão */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-night/55 p-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            >
+              <span className="translate-y-2 font-serif text-base font-medium leading-snug text-white transition-transform duration-300 group-hover:translate-y-0 sm:text-lg">
+                {img.alt}
+              </span>
+              <span className="inline-flex translate-y-2 items-center gap-1.5 rounded-full bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0d4185] transition-transform duration-300 group-hover:translate-y-0">
+                <Expand className="h-4 w-4" aria-hidden="true" />
+                Ampliar
+              </span>
+            </span>
           </button>
         ))}
       </div>
