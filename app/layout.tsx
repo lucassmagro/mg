@@ -21,7 +21,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: `${marca.nome} — ${marca.tagline}`,
+    default: marca.nome,
     template: `%s · ${marca.nome}`,
   },
   description:
