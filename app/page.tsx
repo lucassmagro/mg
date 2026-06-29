@@ -238,8 +238,6 @@ export default async function HomePage() {
       {/* CTA BAND */}
       <section className="container-x pb-24">
         <div className="relative overflow-hidden rounded-3xl bg-accent-700 px-8 py-14 sm:px-14 sm:py-16">
-          <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/5" />
-          <div className="absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-white/5" />
           <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
               <h2 className="font-serif text-3xl font-semibold text-white sm:text-4xl">
