@@ -146,7 +146,7 @@ export default function Footer() {
           <p>
             Feito por{" "}
             <a
-              href="https://lucasmagro.vercel.app/"
+              href="https://lucassmagro.com.br"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-white/75 underline-offset-2 transition-colors hover:text-white hover:underline"
