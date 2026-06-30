@@ -4,12 +4,14 @@ import { listarEmpreendimentos } from "@/lib/empreendimentos";
 import EmpreendimentoCard from "@/components/EmpreendimentoCard";
 import { marca } from "@/lib/config";
 
-export const dynamic = "force-dynamic";
+// ISR: o salvar/excluir no painel revalida "/empreendimentos" (actions.ts).
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Empreendimentos",
   description:
     "Conheça os empreendimentos da MG Incorporações, com destaque para o Valley Business — torre corporativa de salas comerciais em Chapecó.",
+  alternates: { canonical: "/empreendimentos" },
 };
 
 export default async function EmpreendimentosPage() {

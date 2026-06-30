@@ -7,6 +7,8 @@ export const marca = {
   nome: "MG Incorporações",
   nomeCurto: "MG",
   segmento: "Incorporadora",
+  // URL canônica do site (fonte única para metadata, sitemap, robots e JSON-LD).
+  url: "https://www.mgincorporacoes.com.br",
   tagline: "Empreendimentos que valorizam o seu futuro",
   descricaoCurta:
     "Incorporadora dedicada a projetos que unem arquitetura, localização e qualidade construtiva.",

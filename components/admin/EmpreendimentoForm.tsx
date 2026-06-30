@@ -37,7 +37,6 @@ const STATUS: { v: StatusEmpreendimento; l: string }[] = [
 const TIPOS: { v: TipoImovel; l: string }[] = [
   { v: "residencial", l: "Residencial" },
   { v: "comercial", l: "Comercial" },
-  { v: "industrial", l: "Industrial" },
 ];
 
 const OPERACOES: { v: Operacao; l: string }[] = [

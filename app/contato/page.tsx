@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "Contato",
   description:
     "Fale com a MG Incorporações: endereço, telefone, e-mail, WhatsApp e horário de atendimento.",
+  alternates: { canonical: "/contato" },
 };
 
 export default function ContatoPage() {

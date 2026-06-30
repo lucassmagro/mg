@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -43,7 +44,20 @@ const valores = [
   },
 ];
 
-export const dynamic = "force-dynamic";
+// Conteúdo muda raramente; ISR mantém o cache da Vercel e o salvar do painel
+// já dispara revalidatePath("/") (app/admin/actions.ts) para refletir edições.
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  // `absolute` evita o sufixo do template (· MG Incorporações) na home.
+  title: {
+    absolute: "MG Incorporações — Incorporadora em Chapecó | Valley Business",
+  },
+  description:
+    "Incorporadora em Chapecó (SC). Conheça o Valley Business, torre corporativa de salas comerciais de 20 a 64 m² no bairro Maria Goretti — rooftop, auditório e infraestrutura completa.",
+  alternates: { canonical: "/" },
+  openGraph: { url: "/" },
+};
 
 export default async function HomePage() {
   const [destaques, lista, categorias] = await Promise.all([

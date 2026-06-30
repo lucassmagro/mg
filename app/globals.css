@@ -24,6 +24,26 @@
     scrollbar-color: rgb(var(--brand)) rgb(var(--sand-100));
   }
 
+  /* Respeita quem prefere menos movimento: sem scroll suave, sem animações
+     longas e sem o zoom de imagem no hover (cards, galeria, destaque). */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .group:hover .group-hover\:scale-105,
+    .group:hover .group-hover\:scale-110,
+    .group:hover img {
+      transform: none !important;
+    }
+  }
+
   /* Barra de rolagem nas cores da marca (Chrome/Edge/Safari) */
   ::-webkit-scrollbar {
     width: 12px;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import type { GaleriaCategoria } from "@/data/empreendimentos";
@@ -65,6 +65,9 @@ export default function GaleriaCategorizada({
 }) {
   const [catAtiva, setCatAtiva] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  // Guarda quem tinha o foco antes de abrir o lightbox, para devolver ao fechar.
+  const focoAnterior = useRef<HTMLElement | null>(null);
 
   const imagens = galeria[catAtiva].imagens;
   const footprints = useMemo(() => layoutMosaico(imagens.length), [imagens.length]);
@@ -80,16 +83,47 @@ export default function GaleriaCategorizada({
 
   useEffect(() => {
     if (lightbox === null) return;
+
+    // Lembra o elemento focado e move o foco para dentro do diálogo.
+    focoAnterior.current = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+
+    /** Elementos focáveis dentro do lightbox (botões de navegar/fechar). */
+    const focaveis = () =>
+      Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      );
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") fechar();
-      if (e.key === "ArrowRight") navegar(1);
-      if (e.key === "ArrowLeft") navegar(-1);
+      if (e.key === "Escape") return fechar();
+      if (e.key === "ArrowRight") return navegar(1);
+      if (e.key === "ArrowLeft") return navegar(-1);
+      // Focus trap: mantém o Tab circulando dentro do diálogo.
+      if (e.key === "Tab") {
+        const itens = focaveis();
+        if (itens.length === 0) return;
+        const primeiro = itens[0];
+        const ultimo = itens[itens.length - 1];
+        const ativo = document.activeElement;
+        if (e.shiftKey && (ativo === primeiro || ativo === dialogRef.current)) {
+          e.preventDefault();
+          ultimo.focus();
+        } else if (!e.shiftKey && ativo === ultimo) {
+          e.preventDefault();
+          primeiro.focus();
+        }
+      }
     };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      // Devolve o foco a quem abriu o lightbox.
+      focoAnterior.current?.focus();
     };
   }, [lightbox, fechar, navegar]);
 
@@ -158,7 +192,9 @@ export default function GaleriaCategorizada({
       {/* Lightbox */}
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-night/95 p-4"
+          ref={dialogRef}
+          tabIndex={-1}
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-night/95 p-4 outline-none"
           onClick={fechar}
           role="dialog"
           aria-modal="true"

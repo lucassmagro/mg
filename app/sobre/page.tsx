@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "A incorporadora",
   description:
     "Conheça a MG Incorporações: história, propósito e a forma de trabalhar de uma incorporadora dedicada a empreendimentos de alto padrão.",
+  alternates: { canonical: "/sobre" },
 };
 
 const valores = [

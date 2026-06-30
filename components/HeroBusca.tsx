@@ -156,8 +156,8 @@ export default function HeroBusca({
                   return (
                     <button
                       key={op}
-                      role="tab"
-                      aria-selected={ativo}
+                      type="button"
+                      aria-pressed={ativo}
                       onClick={() => trocarOperacao(op)}
                       className={`-mb-px rounded-t-xl border border-b-0 px-6 py-2.5 text-sm font-semibold backdrop-blur-md transition-colors ${
                         ativo

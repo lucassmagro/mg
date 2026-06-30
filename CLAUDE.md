@@ -64,8 +64,8 @@ components/
   EmpreendimentoCard.tsx     # card reutilizado (home/listagem)
   GaleriaCategorizada.tsx    # galeria com abas de categoria + lightbox (client)
   Tipologias.tsx             # plantas das salas, alterna individual/unificada (client)
-  VisitForm.tsx              # form de interesse (visual; client)
-  ContactForm.tsx            # form de contato (visual; client)
+  HeroCarrossel.tsx          # carrossel de fundo do banner do empreendimento (client)
+  CarrosselRenders.tsx       # carrossel de renders na home (client)
   FloatingWhatsApp.tsx       # botão flutuante
   SiteChrome.tsx             # mostra Header/Footer no site; oculta em /admin (client)
   admin/                     # painel: AdminTopbar, ListaAdmin, EmpreendimentoForm, CampoUpload

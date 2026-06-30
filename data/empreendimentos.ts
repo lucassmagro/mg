@@ -28,12 +28,11 @@ export const OPERACAO_LABEL: Record<Operacao, string> = {
 };
 
 /** Finalidade do imóvel (chips de "Finalidade" na busca). */
-export type TipoImovel = "residencial" | "comercial" | "industrial";
+export type TipoImovel = "residencial" | "comercial";
 
 export const TIPO_IMOVEL_LABEL: Record<TipoImovel, string> = {
   residencial: "Residencial",
   comercial: "Comercial",
-  industrial: "Industrial",
 };
 
 export interface Numero {

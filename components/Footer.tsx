@@ -121,7 +121,7 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-xs text-white/55 sm:flex-row">
+        <div className="container-x flex flex-col items-center justify-between gap-3 py-6 text-xs text-white/75 sm:flex-row">
           <p>
             © {ano} {marca.nome}. Todos os direitos reservados.
           </p>

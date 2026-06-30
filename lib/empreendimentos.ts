@@ -6,7 +6,7 @@
  * O mapeamento converte a linha do banco (snake_case + colunas/JSONB) para o
  * tipo `Empreendimento` que os componentes já esperam (camelCase).
  */
-import { criarClienteServer } from "@/lib/supabase/server";
+import { criarClienteLeitura } from "@/lib/supabase/leitura";
 import type {
   Empreendimento,
   StatusEmpreendimento,
@@ -111,7 +111,7 @@ function colunaPublicadoFaltando(error: { code?: string; message?: string }) {
 export async function listarEmpreendimentos(opts?: {
   todos?: boolean;
 }): Promise<Empreendimento[]> {
-  const supabase = criarClienteServer();
+  const supabase = criarClienteLeitura();
 
   const consulta = (filtrarPublicado: boolean) => {
     let q = supabase
@@ -140,7 +140,7 @@ export async function listarEmpreendimentos(opts?: {
 export async function getEmpreendimento(
   id: string,
 ): Promise<Empreendimento | null> {
-  const supabase = criarClienteServer();
+  const supabase = criarClienteLeitura();
   const { data, error } = await supabase
     .from("empreendimentos")
     .select(SELECT)
@@ -156,7 +156,7 @@ export async function getEmpreendimento(
 
 /** Empreendimentos em destaque (apenas publicados). */
 export async function getDestaques(): Promise<Empreendimento[]> {
-  const supabase = criarClienteServer();
+  const supabase = criarClienteLeitura();
 
   const consulta = (filtrarPublicado: boolean) => {
     let q = supabase
