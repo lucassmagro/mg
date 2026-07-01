@@ -208,9 +208,22 @@ export default function EmpreendimentoView({
           )}
         </div>
 
-        {/* Card de contato */}
+        {/* Vídeo em destaque + card de contato */}
         <aside>
-          <div className="sticky top-32 space-y-4">
+          <div className="sticky top-32 space-y-6">
+            {e.videos.length > 0 && (
+              <div className="relative overflow-hidden rounded-2xl bg-ink shadow-card">
+                <video
+                  controls
+                  preload="none"
+                  poster={e.videos[0].poster}
+                  className="aspect-[9/16] w-full object-cover lg:aspect-auto lg:h-[calc(100vh-30rem)] lg:max-h-[560px]"
+                >
+                  <source src={e.videos[0].src} type="video/mp4" />
+                  Seu navegador não suporta a reprodução de vídeo.
+                </video>
+              </div>
+            )}
             <div className="rounded-2xl border border-ink/10 bg-surface p-6 shadow-card">
               <p className="font-serif text-xl text-ink">
                 Interessado no {e.nome}?
@@ -235,10 +248,6 @@ export default function EmpreendimentoView({
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 {marca.telefone}
               </a>
-
-              <p className="mt-6 text-center text-xs text-ink-muted">
-                {marca.nome} · CNPJ {marca.cnpj}
-              </p>
             </div>
           </div>
         </aside>
@@ -321,8 +330,8 @@ export default function EmpreendimentoView({
         </section>
       )}
 
-      {/* VÍDEOS */}
-      {e.videos.length > 0 && (
+      {/* VÍDEOS — o 1º vídeo sobe para a seção "O empreendimento"; aqui ficam os demais */}
+      {e.videos.length > 1 && (
         <section className="border-t border-ink/10 bg-surface py-16">
           <div className="container-x">
             <p className="eyebrow">Vídeos</p>
@@ -330,7 +339,9 @@ export default function EmpreendimentoView({
               Veja o {e.nome} em movimento
             </h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {e.videos.map((v, i) => (
+              {e.videos.slice(1).map((v, k) => {
+                const i = k + 1;
+                return (
                 <figure key={i}>
                   <div className="relative overflow-hidden rounded-2xl bg-ink shadow-card">
                     <video
@@ -354,7 +365,8 @@ export default function EmpreendimentoView({
                     />
                   </figcaption>
                 </figure>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
