@@ -22,7 +22,10 @@ import type {
   TipoImovel,
   Operacao,
 } from "@/data/empreendimentos";
-import { DIFERENCIAL_ICONS } from "@/lib/diferencialIcons";
+import {
+  DIFERENCIAL_ICONS,
+  DIFERENCIAL_ICON_LABELS,
+} from "@/lib/diferencialIcons";
 import { salvarEmpreendimento } from "@/app/admin/actions";
 import CampoUpload from "@/components/admin/CampoUpload";
 import EmpreendimentoView from "@/components/EmpreendimentoView";
@@ -514,15 +517,11 @@ export default function EmpreendimentoForm({
           rotuloAdd="Adicionar diferencial"
           render={(item, _i, up) => (
             <div className="grid flex-1 gap-3">
-              <div className="grid gap-3 sm:grid-cols-[180px_1fr]">
-                <Selecao
-                  label="Ícone"
-                  value={item.icon}
-                  onChange={(v) => up({ ...item, icon: v })}
-                  opcoes={ICONES.map((k) => ({ v: k, l: k }))}
-                />
-                <Texto label="Título" value={item.titulo} onChange={(v) => up({ ...item, titulo: v })} />
-              </div>
+              <SelecaoIcone
+                value={item.icon}
+                onChange={(v) => up({ ...item, icon: v })}
+              />
+              <Texto label="Título" value={item.titulo} onChange={(v) => up({ ...item, titulo: v })} />
               <Area label="Descrição" value={item.desc} onChange={(v) => up({ ...item, desc: v })} rows={2} />
             </div>
           )}
@@ -1039,6 +1038,53 @@ function Selecao({
           </option>
         ))}
       </select>
+    </div>
+  );
+}
+
+/** Seletor de ícone: mostra todos os ícones disponíveis como botões. */
+function SelecaoIcone({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="label">Ícone</label>
+      <div className="mt-1.5 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {ICONES.map((k) => {
+          const Icone = DIFERENCIAL_ICONS[k];
+          const info = DIFERENCIAL_ICON_LABELS[k];
+          const ativo = k === value;
+          return (
+            <button
+              key={k}
+              type="button"
+              onClick={() => onChange(k)}
+              aria-pressed={ativo}
+              className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition ${
+                ativo
+                  ? "border-accent-600 bg-accent-50 text-accent-700 ring-1 ring-accent-600"
+                  : "border-sand-300 bg-white text-ink-soft hover:border-accent-300 hover:bg-sand-50"
+              }`}
+            >
+              <Icone className="h-5 w-5 shrink-0" aria-hidden />
+              <span className="min-w-0 leading-tight">
+                <span className="block truncate text-sm font-medium text-ink">
+                  {info?.nome ?? k}
+                </span>
+                {info?.ex && (
+                  <span className="block truncate text-[11px] text-ink-muted">
+                    ex.: {info.ex}
+                  </span>
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

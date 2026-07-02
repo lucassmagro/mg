@@ -478,7 +478,7 @@ export default function EmpreendimentoView({
       <section className="container-x pb-24">
         <div className="rounded-3xl bg-accent-700 px-8 py-14 text-center sm:px-14">
           <h2 className="mx-auto max-w-2xl font-serif text-3xl font-semibold text-white sm:text-4xl">
-            Garanta a sua sala no {e.nome}
+            Garanta sua unidade no {e.nome}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-white/85">
             Fale agora com a nossa equipe e receba plantas, tabela de valores e
