@@ -9,7 +9,7 @@ export default async function EditarEmpreendimentoPage({
 }: {
   params: { id: string };
 }) {
-  const e = await getEmpreendimento(params.id);
+  const e = await getEmpreendimento(params.id, { semCache: true });
   if (!e) notFound();
 
   return <EmpreendimentoForm inicial={e} isEdit />;

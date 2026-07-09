@@ -59,6 +59,7 @@ function revalidarTudo(id: string) {
   revalidatePath("/empreendimentos");
   revalidatePath(`/empreendimentos/${id}`);
   revalidatePath("/admin");
+  revalidatePath(`/admin/empreendimentos/${id}`);
 }
 
 export async function salvarEmpreendimento(

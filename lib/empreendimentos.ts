@@ -106,12 +106,14 @@ function colunaPublicadoFaltando(error: { code?: string; message?: string }) {
 
 /**
  * Lista empreendimentos ordenados. Por padrão retorna só os **publicados**;
- * passe `{ todos: true }` (uso do painel) para incluir rascunhos.
+ * passe `{ todos: true }` (uso do painel) para incluir rascunhos. `semCache`
+ * força leitura sem cache (uso do painel, para refletir salvamentos na hora).
  */
 export async function listarEmpreendimentos(opts?: {
   todos?: boolean;
+  semCache?: boolean;
 }): Promise<Empreendimento[]> {
-  const supabase = criarClienteLeitura();
+  const supabase = criarClienteLeitura({ semCache: opts?.semCache });
 
   const consulta = (filtrarPublicado: boolean) => {
     let q = supabase
@@ -136,11 +138,15 @@ export async function listarEmpreendimentos(opts?: {
   return (data as EmpreendimentoRow[]).map(linhaParaEmpreendimento);
 }
 
-/** Um empreendimento pelo slug (id). Retorna null se não existir. */
+/**
+ * Um empreendimento pelo slug (id). Retorna null se não existir. `semCache`
+ * força leitura sem cache (uso do painel, para refletir salvamentos na hora).
+ */
 export async function getEmpreendimento(
   id: string,
+  opts?: { semCache?: boolean },
 ): Promise<Empreendimento | null> {
-  const supabase = criarClienteLeitura();
+  const supabase = criarClienteLeitura({ semCache: opts?.semCache });
   const { data, error } = await supabase
     .from("empreendimentos")
     .select(SELECT)
